@@ -14,7 +14,7 @@ public class conexionSQL {
    public static Connection conexion(){
         try {
             Class.forName("com.mysql.jdbc.Driver");
-             conectar=DriverManager.getConnection("jdbc:mysql://localhost/ciecas","root","root");
+             conectar=DriverManager.getConnection("jdbc:mysql://localhost/ciecas","root","password");
             System.out.println("Exito en la conexion!");
             
         } catch (ClassNotFoundException | SQLException e) {
