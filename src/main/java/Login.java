@@ -123,8 +123,19 @@ public class Login extends javax.swing.JFrame {
             
             if(modSql.login(mod)){
                 
-                menuprueba frmprueba = new menuprueba();
-                frmprueba.setVisible(true);
+                if(mod.getId_tipo() == 1){
+                    menuprueba frmprueba = new menuprueba();
+                    this.dispose();
+                    frmprueba.setVisible(true);
+                }else{
+                    if(mod.getId_tipo() == 3){
+                    Administracion frmprueba = new Administracion();
+                    this.dispose();
+                    frmprueba.setVisible(true);
+                    }
+                }
+                
+                
             
             }else{
                 JOptionPane.showMessageDialog(null, "Datos incorrectos");
