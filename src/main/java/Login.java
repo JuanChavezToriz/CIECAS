@@ -1,4 +1,7 @@
 
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /*
@@ -12,12 +15,17 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
 
+    private ImageIcon icono;
+    private ImageIcon imagen;
+
     /**
      * Creates new form Login
      */
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.pintarImagen(this.lblimagen1, "src\\main\\java\\imagenes\\logo1.png");
+        this.pintarImagen(this.lblimagen2, "src\\main\\java\\imagenes\\logociecas.jpg");
     }
 
     /**
@@ -42,6 +50,9 @@ public class Login extends javax.swing.JFrame {
         ltlDer = new javax.swing.JPanel();
         inferior = new javax.swing.JPanel();
         ltlIzq = new javax.swing.JPanel();
+        lblimagen1 = new javax.swing.JLabel();
+        lblimagen2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -55,7 +66,7 @@ public class Login extends javax.swing.JFrame {
         btnIngresar.setBackground(new java.awt.Color(111, 27, 70));
         btnIngresar.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         btnIngresar.setForeground(new java.awt.Color(255, 255, 255));
-        btnIngresar.setText("Iniciar Sesión");
+        btnIngresar.setText("Ingresar");
         btnIngresar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnIngresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -166,6 +177,16 @@ public class Login extends javax.swing.JFrame {
 
         bg.add(ltlIzq, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 10, 480));
 
+        lblimagen1.setText("lblimagen1");
+        bg.add(lblimagen1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 90, 96));
+
+        lblimagen2.setText("lblimagen2");
+        bg.add(lblimagen2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 50, 105, 85));
+
+        jLabel3.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        jLabel3.setText("Iniciar Sesión");
+        bg.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 220, 40));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -206,9 +227,15 @@ public class Login extends javax.swing.JFrame {
                     frmprueba.setVisible(true);
                 }else{
                     if(mod.getId_tipo() == 3){
-                    Administracion frmprueba = new Administracion();
-                    this.dispose();
-                    frmprueba.setVisible(true);
+                        Administracion frmprueba = new Administracion();
+                        this.dispose();
+                        frmprueba.setVisible(true);
+                    }else{
+                        if(mod.getId_tipo() == 2){
+                            Evento frmprueba = new Evento();
+                            this.dispose();
+                            frmprueba.setVisible(true);
+                        }
                     }
                 }
                 
@@ -261,6 +288,19 @@ public class Login extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void pintarImagen(JLabel lbl, String ruta){
+        this.imagen = new ImageIcon(ruta);
+        this.icono = new ImageIcon(
+                this.imagen.getImage().getScaledInstance(
+                        lbl.getWidth(), 
+                        lbl.getHeight(), 
+                        Image.SCALE_DEFAULT
+                )
+        );
+        lbl.setIcon(this.icono);
+        this.repaint();  
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bg;
@@ -269,8 +309,11 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel inferior;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel lblimagen1;
+    private javax.swing.JLabel lblimagen2;
     private javax.swing.JPanel ltlDer;
     private javax.swing.JPanel ltlIzq;
     private javax.swing.JPanel superior;
