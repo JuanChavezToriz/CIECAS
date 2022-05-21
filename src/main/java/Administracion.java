@@ -1,3 +1,14 @@
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Calendar;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -8,16 +19,144 @@
  * @author estme
  */
 public class Administracion extends javax.swing.JFrame {
-
-    /**
+    
+    conexionSQL cc = new conexionSQL();
+    Connection con = cc.conexion();
+  
+    /** 
      * Creates new form Administracion
      */
     public Administracion() {
         initComponents();
         this.setLocationRelativeTo(null);
+        mostrarDatos(); 
+    }
+    
+    public void mostrarDatos(){
+    
+        String[] titulos = {"ID del Solicitante", "Nombre","Programa Academico"};
+        String[] registros = new String[3];
+        
+       DefaultTableModel modelo = new DefaultTableModel(null,titulos){
+           @Override 
+           public boolean isCellEditable(int row, int column){
+               return false;
+           }
+       
+       };
+       
+       String SQL = "select s.ID_Solic, s.Nom_Solic,s.AP_Solic,s.AM_Solic, p.Nom_prog from solicitante s INNER JOIN `programa academico` p  where s.Clv_Prog = p.Clv_Prog";
+       
+       try{
+           Statement st = con.createStatement();
+           ResultSet rs = st.executeQuery(SQL);
+           while(rs.next()){
+               
+               registros[0]= rs.getString("ID_Solic");
+               registros[1]= rs.getString("Nom_Solic")+ " "+ rs.getString("AP_Solic")+ " "+ rs.getString("AM_Solic") ;
+               registros[2]= rs.getString("Nom_prog");
+               
+               modelo.addRow(registros);
+               
+           }
+           
+           tablaSolicitud.setModel(modelo);
+       }catch (Exception ex) {
+            JOptionPane.showMessageDialog(null,"Error al Mostrar Datos" + ex.getMessage()); 
+        }
+       
+    }
+    
+    public void mostrarInformacionSolicitud(String id){
+    
+        try{
+            
+            String[] registros = new String[14];
+            
+            String SQL = "select s.FN_Solic,s.Sexo_Solic,d.Call_Domic,d.NE_Domic,d.NI_Domic,d.Col_Domic,d.MD_Domic,d.CP_Domic,d.Est_Domic,d.Pai_Domic,c.TEC_Conta,"
+                         + "c.TEM_Conta,c.C1_Conta,c.C2_Conta from solicitante s inner join domicilio d on s.ID_Solic = d .ID_Solic inner join contacto c "
+                         + "on s.ID_Solic = c .ID_Solic where s.ID_Solic = ?";
+            
+            PreparedStatement pst = con.prepareStatement(SQL);
+            pst.setString(1, id.trim());
+            ResultSet rs = pst.executeQuery();
+            
+            if(rs.next()){
+                registros[0] = rs.getString("s.FN_Solic");
+                registros[1] = rs.getString("s.Sexo_Solic");
+                registros[2] = rs.getString("d.Call_Domic");
+                registros[3] = rs.getString("d.NE_Domic");
+                registros[4] = rs.getString("d.NI_Domic");
+                registros[5] = rs.getString("d.Col_Domic");
+                registros[6] = rs.getString("d.MD_Domic");
+                registros[7] = rs.getString("d.Est_Domic");
+                registros[8] = rs.getString("d.Pai_Domic");
+                registros[9] = rs.getString("c.TEC_Conta");
+                registros[10] = rs.getString("c.TEM_Conta");
+                registros[11] = rs.getString("c.C1_Conta");
+                registros[12] = rs.getString("c.C2_Conta");
+                registros[13] = rs.getString("d.CP_Domic");
+            }
+            
+            
+            
+            
+            
+            JOptionPane.showMessageDialog(null, 
+                      "Edad: " + calcularEdad(registros[0])+
+                      "\nSexo: " + conocerSexo(registros[1])+ 
+                      "\nDirección: " + registros[2] + "  " +  registros[3]+ " " + comprobarNull(registros[4]) + ", "+ registros[5] +", "+ registros[6]+
+                      ", " + registros[7] + ", " + registros[8]+ 
+                      "\nCódigo Postal: " + registros[13]+
+                      "\nTeléfono de Casa: "+ registros[9]+
+                      "\nTeléfono Móvil: " + registros[10] +
+                      "\nCorreo electronico 1: " + registros[11]+
+                      "\nCorreo electronico 2: " + registros[12], "DATOS DEL SOLICITANTE",JOptionPane.INFORMATION_MESSAGE);
+        
+        }catch (Exception ex) {
+            JOptionPane.showMessageDialog(null,"Error:" + ex.getMessage());
+        }
+        
+        
+        
+    
+    
+    
     }
 
-    /**
+    public String comprobarNull(String cadena){
+        
+        if(cadena == null){
+            return "";
+        }else{
+            return cadena;
+        }
+    
+    }
+    public String conocerSexo(String Sexo){
+        int numero = Integer.parseInt(Sexo);
+        if(numero == 0){
+            return "Maculino";
+        }else{
+            return "Femenino";
+        }
+    }
+
+    public String calcularEdad(String Fecha){
+        
+        String[] partes= Fecha.split("-");
+        int anyo = Integer.parseInt(partes[0]);
+        int mes = Integer.parseInt(partes[1]);
+        int dia = Integer.parseInt(partes[2]);
+        
+        LocalDate fechaHoy = LocalDate.now();
+        LocalDate fechaNacimiento = LocalDate.of(anyo, mes, dia);
+        Period p = Period.between(fechaNacimiento, fechaHoy);
+        
+        String Edad = p.getYears() + " años, " + p.getMonths() + " meses, " + p.getDays() + "días.";
+        return Edad;
+    }
+        /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
@@ -30,7 +169,7 @@ public class Administracion extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaSolicitud = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -61,7 +200,7 @@ public class Administracion extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jPanel22 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tablaEgresados = new javax.swing.JTable();
         jButton9 = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
@@ -82,16 +221,21 @@ public class Administracion extends javax.swing.JFrame {
 
         jPanel16.setAutoscrolls(true);
 
-        jTable1.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaSolicitud.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        tablaSolicitud.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID del Solicitante", "Nombre", "Programa Academico"
+
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tablaSolicitud.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaSolicitudMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaSolicitud);
 
         jButton2.setText("Inscribir");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -374,8 +518,8 @@ public class Administracion extends javax.swing.JFrame {
 
         jPanel22.setAutoscrolls(true);
 
-        jTable3.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tablaEgresados.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        tablaEgresados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -383,7 +527,13 @@ public class Administracion extends javax.swing.JFrame {
                 "ID del Solicitante", "Nombre", "Programa Academico"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        jScrollPane3.setViewportView(tablaEgresados);
+        if (tablaEgresados.getColumnModel().getColumnCount() > 0) {
+            tablaEgresados.getColumnModel().getColumn(0).setResizable(false);
+            tablaEgresados.getColumnModel().getColumn(0).setHeaderValue("ID del Solicitante");
+            tablaEgresados.getColumnModel().getColumn(1).setHeaderValue("Nombre");
+            tablaEgresados.getColumnModel().getColumn(2).setHeaderValue("Programa Academico");
+        }
 
         jButton9.setText("Más Información");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
@@ -504,6 +654,11 @@ public class Administracion extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        int filaSeleccionada = tablaSolicitud.getSelectedRow();
+        String valorID= (String) tablaSolicitud.getValueAt(filaSeleccionada, 0);
+        mostrarInformacionSolicitud(valorID);
+       
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -529,6 +684,11 @@ public class Administracion extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void tablaSolicitudMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaSolicitudMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_tablaSolicitudMouseClicked
 
     /**
      * @param args the command line arguments
@@ -602,11 +762,11 @@ public class Administracion extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTable tablaEgresados;
+    private javax.swing.JTable tablaSolicitud;
     // End of variables declaration//GEN-END:variables
 }
