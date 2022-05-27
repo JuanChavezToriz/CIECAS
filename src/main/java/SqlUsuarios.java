@@ -12,14 +12,14 @@ public class SqlUsuarios extends conexionSQL{
     
     public boolean login(usuarios usr){
         PreparedStatement ps = null;
-        ResultSet rs =null;
+        ResultSet rs =null;  
         Connection con = conexion();
         
         String sql = "SELECT ID_Usr, Nomb_Usr,Contr_Usr,US_Usr,ID_TUR FROM usuarios WHERE Nomb_Usr = ?";
         
         try {
             
-            ps = con.prepareStatement(sql);
+                ps = con.prepareStatement(sql);
                 ps.setString(1, usr.getUsuario());
                 rs = ps.executeQuery();
                 

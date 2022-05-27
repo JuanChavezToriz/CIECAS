@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -24,6 +25,7 @@ public class menuprueba extends javax.swing.JFrame {
     public menuprueba() {
         initComponents();
         this.setLocationRelativeTo(this);
+        //holaaaaaaa soy juan borrar
         this.pintarImagen(this.lblimagen1, "src\\main\\java\\imagenes\\logo1.png");
         this.pintarImagen(this.lblimagen2, "src\\main\\java\\imagenes\\logo1.png");
         this.pintarImagen(this.lblimagen3, "src\\main\\java\\imagenes\\logo1.png");
@@ -82,9 +84,7 @@ public class menuprueba extends javax.swing.JFrame {
         tfcp = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        JCestado = new javax.swing.JComboBox<>();
         jLabel13 = new javax.swing.JLabel();
-        JCpais = new javax.swing.JComboBox<>();
         tftelcasa = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         tftelcelular = new javax.swing.JTextField();
@@ -108,6 +108,8 @@ public class menuprueba extends javax.swing.JFrame {
         tfnomacade = new javax.swing.JTextField();
         jdfechanaci = new com.toedter.calendar.JDateChooser();
         jLabel24 = new javax.swing.JLabel();
+        tfpais = new javax.swing.JTextField();
+        tfestado = new javax.swing.JTextField();
         jDesktopPane2 = new javax.swing.JDesktopPane();
         SUBTITULO5 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
@@ -203,7 +205,7 @@ public class menuprueba extends javax.swing.JFrame {
         titulo1.setText("INSTITUTO POLITÉCNICO NACIONAL");
         titulo1.setAutoscrolls(true);
 
-        lblimagen1.setText("Logo 1");
+        lblimagen1.setText("logo 1");
 
         SUBTITULO.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         SUBTITULO.setText("Secretaría de Investigación y Posgrado Dirección de Posgrado ");
@@ -325,24 +327,8 @@ public class menuprueba extends javax.swing.JFrame {
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Estado");
 
-        JCestado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        JCestado.setToolTipText("Selecciona el Estado");
-        JCestado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JCestadoActionPerformed(evt);
-            }
-        });
-
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel13.setText("País");
-
-        JCpais.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        JCpais.setToolTipText("Selecciona el Pais");
-        JCpais.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JCpaisActionPerformed(evt);
-            }
-        });
 
         tftelcasa.setToolTipText("Introduce el telefono");
         tftelcasa.addActionListener(new java.awt.event.ActionListener() {
@@ -443,9 +429,24 @@ public class menuprueba extends javax.swing.JFrame {
         });
 
         jdfechanaci.setToolTipText("Introduce la fecha de nacimiento");
+        jdfechanaci.setDateFormatString("dd MM yyyy");
         jdfechanaci.setMinSelectableDate(new java.util.Date(-62135744288000L));
 
         jLabel24.setText("Fecha de Nacimiento");
+
+        tfpais.setToolTipText("Introduce el CP");
+        tfpais.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfpaisActionPerformed(evt);
+            }
+        });
+
+        tfestado.setToolTipText("Introduce el CP");
+        tfestado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfestadoActionPerformed(evt);
+            }
+        });
 
         jDesktopPane1.setLayer(titulo1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(lblimagen1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -473,9 +474,7 @@ public class menuprueba extends javax.swing.JFrame {
         jDesktopPane1.setLayer(tfcp, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel11, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel12, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(JCestado, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel13, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(JCpais, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(tftelcasa, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel14, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(tftelcelular, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -499,6 +498,8 @@ public class menuprueba extends javax.swing.JFrame {
         jDesktopPane1.setLayer(tfnomacade, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jdfechanaci, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel24, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(tfpais, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(tfestado, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -590,14 +591,14 @@ public class menuprueba extends javax.swing.JFrame {
                                                         .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                                 .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                                        .addGap(18, 18, 18)
-                                                        .addComponent(JCestado, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGap(12, 12, 12)
-                                                        .addComponent(JCpais, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
                                                         .addGap(37, 37, 37)
-                                                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addGap(39, 39, 39)
+                                                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                                                        .addGap(26, 26, 26)
+                                                        .addComponent(tfestado, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(28, 28, 28)
+                                                        .addComponent(tfpais, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGap(34, 34, 34)
                                                 .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(tftelcasa, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addGroup(jDesktopPane1Layout.createSequentialGroup()
@@ -713,18 +714,13 @@ public class menuprueba extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                .addComponent(tfcp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tfpais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tfcp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tfestado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel11))
-                            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                .addGap(29, 29, 29)
-                                .addComponent(jLabel12))
-                            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(JCpais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(JCestado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel13))
                             .addGroup(jDesktopPane1Layout.createSequentialGroup()
                                 .addComponent(tftelcasa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -732,7 +728,12 @@ public class menuprueba extends javax.swing.JFrame {
                             .addGroup(jDesktopPane1Layout.createSequentialGroup()
                                 .addComponent(tftelcelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel15))))
+                                .addComponent(jLabel15))
+                            .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12)
+                                    .addComponent(jLabel13)))))
                     .addGroup(jDesktopPane1Layout.createSequentialGroup()
                         .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfnoext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1750,8 +1751,8 @@ public class menuprueba extends javax.swing.JFrame {
         tfcolonia.enable(true);
         tfmunicipioalca.enable(true);
         tfcp.enable(true);
-        JCestado.enable(true);
-        JCpais.enable(true);
+        tfestado.enable(true);
+        tfpais.enable(true);
         tftelcasa.enable(true);
         tftelcelular.enable(true);
         rbmasc.setEnabled(true);
@@ -1766,31 +1767,50 @@ public class menuprueba extends javax.swing.JFrame {
 
     private void btnguardarycontinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarycontinuarActionPerformed
         //boton de guardar y continuar
+//boton para elegir el sexo
+int sexo=0;
+//variables para convertir un string a un entero
+int cp=0;
+int telcasa=0;
+int telcelular=0;
+        
+if(rbmasc.isSelected()){
+    sexo=1; //hombre
+} if (rbfeme.isSelected()){
+    sexo=0; //mujer
+}
+//tranformar el tipo date con un formato correcto para la BD
+Date date = jdfechanaci.getDate();
+long d = date.getTime();
+java.sql.Date fecha = new java.sql.Date(d);
+        System.out.println("fecha"+fecha);
+//Codigo para la conexion a la BD
+ ConsultasMenuSQL menu= new ConsultasMenuSQL();
+ //convertir un string a entero
+ cp=Integer.parseInt(tfcp.getText());
+ telcasa=Integer.parseInt(tftelcasa.getText());
+ telcelular=Integer.parseInt(tftelcelular.getText());
+ 
+ //Pasamos los parametros de nuestras variables al metodo de la clase ConsultasMenuSQL
+ menu.solicitante(tfnom22.getText(),tfapep.getText(),tfapem.getText(),tfcalle.getText(),tfnoext.getText(),tfnoint.getText(),tfcolonia.getText(),
+ tfmunicipioalca.getText(),cp,tfestado.getText(),tfpais.getText(),telcasa,telcelular,sexo,tfcorreo1.getText(),tfcorreo2.getText(),tfdiscapacidad.getText(),tflenguaext.getText(),tfnomacade.getText(),fecha);
 
-        /* try {
-            //Consulta para comprobar que el usuario esta registrado en la libreria
-            ps = cn.prepareStatement("Select clv_juguete from juguetes where ((clv_juguete>"+auxclv+")&&(clv_juguete<"+auxclv2+"))");
-            ps.setString(1, tfnom.getText());
-            ps.setString(2, tfapep.getText());
-            ps.setString(3, tfapem.getText());
 
-            rs = ps.executeQuery();
+        
 
-        } catch (SQLException ex) {
-            Logger.getLogger(datos.class.getName()).log(Level.SEVERE, null, ex);
-        } */
 
+//Codigo para desabilitar los campos despues de guardar
+        tfcolonia.enable(false);
         tfnom22.enable(false);
         tfapep.enable(false);
         tfapem.enable(false);
         tfcalle.enable(false);
         tfnoext.enable(false);
         tfnoint.enable(false);
-        tfcolonia.enable(false);
         tfmunicipioalca.enable(false);
         tfcp.enable(false);
-        JCestado.enable(false);
-        JCpais.enable(false);
+        tfestado.enable(false);
+        tfpais.enable(false);
         tftelcasa.enable(false);
         tftelcelular.enable(false);
         rbmasc.setEnabled(false);
@@ -1823,14 +1843,6 @@ public class menuprueba extends javax.swing.JFrame {
     private void tftelcasaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tftelcasaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tftelcasaActionPerformed
-
-    private void JCpaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JCpaisActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_JCpaisActionPerformed
-
-    private void JCestadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JCestadoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_JCestadoActionPerformed
 
     private void tfcpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfcpActionPerformed
         // TODO add your handling code here:
@@ -1924,6 +1936,14 @@ public class menuprueba extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void tfpaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfpaisActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfpaisActionPerformed
+
+    private void tfestadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfestadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfestadoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1973,8 +1993,6 @@ public class menuprueba extends javax.swing.JFrame {
         this.repaint();  
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> JCestado;
-    private javax.swing.JComboBox<String> JCpais;
     private com.toedter.calendar.JDateChooser JDfecha;
     private com.toedter.calendar.JDateChooser JDfechagraduacion1;
     private com.toedter.calendar.JDateChooser JDfechagraduacion2;
@@ -2088,6 +2106,7 @@ public class menuprueba extends javax.swing.JFrame {
     private javax.swing.JTextField tfcorreo2;
     private javax.swing.JTextField tfcp;
     private javax.swing.JTextField tfdiscapacidad;
+    private javax.swing.JTextField tfestado;
     private javax.swing.JTextField tfestado1;
     private javax.swing.JTextField tfestado2;
     private javax.swing.JTextField tfestado3;
@@ -2101,6 +2120,7 @@ public class menuprueba extends javax.swing.JFrame {
     private javax.swing.JTextField tfnoint;
     private javax.swing.JTextField tfnom22;
     private javax.swing.JTextField tfnomacade;
+    private javax.swing.JTextField tfpais;
     private javax.swing.JTextField tfprofe;
     private javax.swing.JTextField tfprograma1;
     private javax.swing.JTextField tfprograma2;

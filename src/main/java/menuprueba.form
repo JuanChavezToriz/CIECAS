@@ -174,17 +174,17 @@
                                                       </Group>
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Group type="102" alignment="0" attributes="0">
-                                                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                                              <Component id="JCestado" min="-2" pref="119" max="-2" attributes="0"/>
-                                                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                                                              <Component id="JCpais" min="-2" pref="119" max="-2" attributes="0"/>
-                                                          </Group>
-                                                          <Group type="102" alignment="0" attributes="0">
                                                               <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                                                               <Component id="jLabel12" min="-2" pref="75" max="-2" attributes="0"/>
                                                           </Group>
+                                                          <Group type="102" alignment="0" attributes="0">
+                                                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                                                              <Component id="tfestado" min="-2" pref="105" max="-2" attributes="0"/>
+                                                              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                                                              <Component id="tfpais" min="-2" pref="114" max="-2" attributes="0"/>
+                                                          </Group>
                                                       </Group>
-                                                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                                                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Component id="tftelcasa" alignment="0" min="-2" pref="119" max="-2" attributes="0"/>
                                                           <Group type="102" alignment="0" attributes="0">
@@ -341,21 +341,15 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="tfcp" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                                      <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="JCpais" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="JCestado" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="tfpais" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="3" attributes="0">
+                                              <Component id="tfcp" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="tfestado" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="tftelcasa" min="-2" max="-2" attributes="0"/>
@@ -366,6 +360,13 @@
                                       <Component id="tftelcelular" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="29" pref="29" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                           </Group>
@@ -456,7 +457,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lblimagen1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Logo 1"/>
+                <Property name="text" type="java.lang.String" value="logo 1"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="SUBTITULO">
@@ -641,49 +642,11 @@
                 <Property name="text" type="java.lang.String" value="Estado"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="JCestado">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
-                  </StringArray>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Selecciona el Estado"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JCestadoActionPerformed"/>
-              </Events>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-              </AuxValues>
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="text" type="java.lang.String" value="Pa&#xed;s"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JComboBox" name="JCpais">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
-                  </StringArray>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Selecciona el Pais"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JCpaisActionPerformed"/>
-              </Events>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-              </AuxValues>
             </Component>
             <Component class="javax.swing.JTextField" name="tftelcasa">
               <Properties>
@@ -843,6 +806,7 @@
             <Component class="com.toedter.calendar.JDateChooser" name="jdfechanaci">
               <Properties>
                 <Property name="toolTipText" type="java.lang.String" value="Introduce la fecha de nacimiento"/>
+                <Property name="dateFormatString" type="java.lang.String" value="dd MM yyyy"/>
                 <Property name="minSelectableDate" type="java.util.Date" editor="org.netbeans.beaninfo.editors.DateEditor">
                   <SerializedValue value="-84,-19,0,5,115,114,0,14,106,97,118,97,46,117,116,105,108,46,68,97,116,101,104,106,-127,1,75,89,116,25,3,0,0,120,112,119,8,-1,-1,-57,124,-27,8,-85,0,120"/>
                 </Property>
@@ -852,6 +816,22 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Fecha de Nacimiento"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfpais">
+              <Properties>
+                <Property name="toolTipText" type="java.lang.String" value="Introduce el CP"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfpaisActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tfestado">
+              <Properties>
+                <Property name="toolTipText" type="java.lang.String" value="Introduce el CP"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfestadoActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
