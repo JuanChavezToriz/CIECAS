@@ -154,9 +154,39 @@ try {
         } //cierre del try //TERMINAMOS CON LA TABLA PROGRAMA ACADEMICO 
 
 } //Cierre de metodo solicitante 
+
+
+//metodo para datos de antecedentes academicos
+   public void antecedentes(String tfprograma1,String tfinstituto1,String tfestado1,Date fecha2,
+                            String tfprograma2,String tfinstituto2,String tfestado2,Date fecha3,
+                            String tfprograma3,String tfinstituto3,String tfestado3,Date fecha4,String nivelaca){
+//ESTO ES UNICAMENTE A LA TABLA
+      try {   
+ ps = cn.prepareStatement("INSERT INTO registro_antecendentes_academicos (Niv_RegisA, PAC_RegisA, Ins_RegisA ,EOP_RegisA,FG_RegisA) VALUES (?,?,?,?,?)");
+            String datos[]=new String[4];
+          DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");       
+		String dateToStr = dateFormat.format(fecha2);
+                String dateToStr2 = dateFormat.format(fecha3);
+                String dateToStr3 = dateFormat.format(fecha4);
+
+               ps.setString(1, nivelaca);
+               ps.setString(2, tfprograma1);
+               ps.setString(3, tfapem);
+               ps.setString(4, dateToStr);
+               ps.setInt(5, sexo); 
+               
+           int rs = ps.executeUpdate();
+            if(rs > 0){
+    
+                JOptionPane.showMessageDialog(null, "¡Solicitante Agregado!");}
+        } catch (SQLException ex) {
+            Logger.getLogger(menuprueba.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error :(");
+        } //cierre del try //TERMINAMOS CON LA TABLA ANTECEDENTES EN LA BD
+       
+
+} //Cierre de metodo antecedentes
    
-   
-}//LLAVE FINAL
-   
-            
+}//LLAVE FINAL DE LA CLASE
+       
 

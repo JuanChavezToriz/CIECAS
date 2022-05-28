@@ -11,10 +11,10 @@ import java.util.logging.Logger;
 public class conexionSQL {
    static Connection conectar = null; 
    
-   public  Connection conexion(){
+   public static Connection conexion(){
         try {
             Class.forName("com.mysql.jdbc.Driver");
-             conectar=DriverManager.getConnection("jdbc:mysql://localhost/ciecasdb","root","root");
+             conectar=DriverManager.getConnection("jdbc:mysql://localhost/ciecas","root","123456789");
             System.out.println("Exito en la conexion!");
             
         } catch (ClassNotFoundException | SQLException e) {

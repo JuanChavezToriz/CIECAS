@@ -806,6 +806,12 @@ public class menuprueba extends javax.swing.JFrame {
         jLabel27.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel27.setText("Institución");
 
+        tfinstituto1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfinstituto1ActionPerformed(evt);
+            }
+        });
+
         jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel28.setText("Estado o País");
 
@@ -1793,8 +1799,55 @@ java.sql.Date fecha = new java.sql.Date(d);
  
  //Pasamos los parametros de nuestras variables al metodo de la clase ConsultasMenuSQL
  menu.solicitante(tfnom22.getText(),tfapep.getText(),tfapem.getText(),tfcalle.getText(),tfnoext.getText(),tfnoint.getText(),tfcolonia.getText(),
- tfmunicipioalca.getText(),cp,tfestado.getText(),tfpais.getText(),telcasa,telcelular,sexo,tfcorreo1.getText(),tfcorreo2.getText(),tfdiscapacidad.getText(),tflenguaext.getText(),tfnomacade.getText(),fecha);
+ tfmunicipioalca.getText(),cp,tfestado.getText(),tfpais.getText(),telcasa,telcelular,sexo,tfcorreo1.getText(),tfcorreo2.getText(),tfdiscapacidad.getText(),
+ tflenguaext.getText(),tfnomacade.getText(),fecha);
 
+//tranformar el tipo date con un formato correcto para la BD
+//nivel licenciatura
+Date date2 = JDfechagraduacion1.getDate();
+long d2 = date2.getTime();
+java.sql.Date fecha2 = new java.sql.Date(d2);
+
+//tranformar el tipo date con un formato correcto para la BD
+//nivel especialidad
+Date date3 = JDfechagraduacion2.getDate();
+long d3 = date3.getTime();
+java.sql.Date fecha3 = new java.sql.Date(d3);
+
+//tranformar el tipo date con un formato correcto para la BD
+//nivel maestria
+Date date4 = JDfechagraduacion2.getDate();
+long d4 = date4.getTime();
+java.sql.Date fecha4 = new java.sql.Date(d4);
+
+//Nivel academico variable para usarse en la BD
+String nivelaca="";
+
+//Validacion de RB de especialidad y maestria
+if(rbespecialidad.isSelected()){
+        System.out.println("");
+        tfprograma2.setText("");
+        tfinstituto2.setText("");
+        tfestado2.setText("");
+        fecha3.setDate(0);
+        fecha3.setMonth(0);
+        fecha3.setYear(0);
+        nivelaca="Especialidad";
+    }
+if(rbmaestria.isSelected()){
+        System.out.println("");
+        tfprograma3.setText("");
+        tfinstituto3.setText("");
+        tfestado3.setText("");
+        fecha4.setDate(0);
+        fecha4.setMonth(0);
+        fecha4.setYear(0);
+        nivelaca="Maestria";
+    }
+
+ menu.antecedentes(tfprograma1.getText(), tfinstituto1.getText(),tfestado1.getText(),fecha2, 
+ tfprograma2.getText(), tfinstituto2.getText(),tfestado2.getText(),fecha3,
+ tfprograma3.getText(), tfinstituto3.getText(),tfestado3.getText(),fecha4, nivelaca);
 
         
 
@@ -1943,6 +1996,10 @@ java.sql.Date fecha = new java.sql.Date(d);
     private void tfestadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfestadoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfestadoActionPerformed
+
+    private void tfinstituto1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfinstituto1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfinstituto1ActionPerformed
 
     /**
      * @param args the command line arguments
