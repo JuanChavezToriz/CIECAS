@@ -159,31 +159,84 @@ try {
 //metodo para datos de antecedentes academicos
    public void antecedentes(String tfprograma1,String tfinstituto1,String tfestado1,Date fecha2,
                             String tfprograma2,String tfinstituto2,String tfestado2,Date fecha3,
-                            String tfprograma3,String tfinstituto3,String tfestado3,Date fecha4,String nivelaca){
+                            String tfprograma3,String tfinstituto3,String tfestado3,Date fecha4,String nivelaca, int especialidad){
+if(especialidad==1){ // nivel licenciatura
 //ESTO ES UNICAMENTE A LA TABLA
       try {   
  ps = cn.prepareStatement("INSERT INTO registro_antecendentes_academicos (Niv_RegisA, PAC_RegisA, Ins_RegisA ,EOP_RegisA,FG_RegisA) VALUES (?,?,?,?,?)");
             String datos[]=new String[4];
           DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");       
 		String dateToStr = dateFormat.format(fecha2);
-                String dateToStr2 = dateFormat.format(fecha3);
-                String dateToStr3 = dateFormat.format(fecha4);
+                //String dateToStr2 = dateFormat.format(fecha3);
+                //String dateToStr3 = dateFormat.format(fecha4);
 
                ps.setString(1, nivelaca);
                ps.setString(2, tfprograma1);
-               ps.setString(3, tfapem);
-               ps.setString(4, dateToStr);
-               ps.setInt(5, sexo); 
+               ps.setString(3, tfinstituto1);
+               ps.setString(4, tfestado1);
+               ps.setString(5, dateToStr); 
                
            int rs = ps.executeUpdate();
             if(rs > 0){
     
-                JOptionPane.showMessageDialog(null, "¡Solicitante Agregado!");}
+                JOptionPane.showMessageDialog(null, "¡licenciatura lista!");}
         } catch (SQLException ex) {
             Logger.getLogger(menuprueba.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Ha ocurrido un error :(");
         } //cierre del try //TERMINAMOS CON LA TABLA ANTECEDENTES EN LA BD
-       
+}
+ 
+if(especialidad==2){ // nivel especialidad
+//ESTO ES UNICAMENTE A LA TABLA
+      try {   
+ ps = cn.prepareStatement("INSERT INTO registro_antecendentes_academicos (Niv_RegisA, PAC_RegisA, Ins_RegisA ,EOP_RegisA,FG_RegisA) VALUES (?,?,?,?,?)");
+            String datos[]=new String[4];
+          DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");       
+		//String dateToStr = dateFormat.format(fecha2);
+                String dateToStr2 = dateFormat.format(fecha3);
+                //String dateToStr3 = dateFormat.format(fecha4);
+
+               ps.setString(1, nivelaca);
+               ps.setString(2, tfprograma2);
+               ps.setString(3, tfinstituto2);
+               ps.setString(4, tfestado2);
+               ps.setString(5, dateToStr2); 
+               
+           int rs = ps.executeUpdate();
+            if(rs > 0){
+    
+                JOptionPane.showMessageDialog(null, "¡especialidad lista!");}
+        } catch (SQLException ex) {
+            Logger.getLogger(menuprueba.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error :(");
+        } //cierre del try //TERMINAMOS CON LA TABLA ANTECEDENTES EN LA BD
+}
+
+if(especialidad==3){ // nivel maestria
+//ESTO ES UNICAMENTE A LA TABLA
+      try {   
+ ps = cn.prepareStatement("INSERT INTO registro_antecendentes_academicos (Niv_RegisA, PAC_RegisA, Ins_RegisA ,EOP_RegisA,FG_RegisA) VALUES (?,?,?,?,?)");
+            String datos[]=new String[4];
+          DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");       
+		//String dateToStr = dateFormat.format(fecha2);
+                //String dateToStr2 = dateFormat.format(fecha3);
+                String dateToStr3 = dateFormat.format(fecha4);
+
+               ps.setString(1, nivelaca);
+               ps.setString(2, tfprograma3);
+               ps.setString(3, tfinstituto3);
+               ps.setString(4, tfestado3);
+               ps.setString(5, dateToStr3); 
+               
+           int rs = ps.executeUpdate();
+            if(rs > 0){
+    
+                JOptionPane.showMessageDialog(null, "¡maestria listo!");}
+        } catch (SQLException ex) {
+            Logger.getLogger(menuprueba.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error :(");
+        } //cierre del try //TERMINAMOS CON LA TABLA ANTECEDENTES EN LA BD
+}
 
 } //Cierre de metodo antecedentes
    

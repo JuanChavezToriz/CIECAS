@@ -1697,6 +1697,64 @@ public class menuprueba extends javax.swing.JFrame {
             tfestado3.enable(false);
             JDfechagraduacion3.setEnabled(false);
             
+   //tranformar el tipo date con un formato correcto para la BD
+//nivel licenciatura
+Date date2 = JDfechagraduacion1.getDate();
+long d2 = date2.getTime();
+java.sql.Date fecha2 = new java.sql.Date(d2);
+
+//Codigo para la conexion a la BD
+ ConsultasMenuSQL menu= new ConsultasMenuSQL();
+
+//Nivel academico variable para usarse en la BD
+String nivelaca="";
+int especialidad=1;
+
+Date date3 = JDfechagraduacion2.getDate();
+long d3 = date2.getTime();
+java.sql.Date fecha3 = new java.sql.Date(d3);
+
+Date date4 = JDfechagraduacion3.getDate();
+long d4 = date2.getTime();
+java.sql.Date fecha4 = new java.sql.Date(d4);
+
+//Validacion de RB de especialidad y maestria
+if(!rbespecialidad.isSelected()){
+    //tranformar el tipo date con un formato correcto para la BD
+//nivel especialidad
+        
+        JDfechagraduacion2.setDate(null);
+        System.out.println("");
+        tfprograma2.setText("");
+        tfinstituto2.setText("");
+        tfestado2.setText("");
+        fecha3.setDate(0);
+        fecha3.setMonth(0);
+        fecha3.setYear(0);
+        nivelaca="Especialidad";
+        especialidad=2;
+        
+    }
+if(!rbmaestria.isSelected()){
+//tranformar el tipo date con un formato correcto para la BD
+//nivel maestria
+        JDfechagraduacion3.setDate(null);
+        System.out.println("");
+        tfprograma3.setText("");
+        tfinstituto3.setText("");
+        tfestado3.setText("");
+        fecha4.setDate(0);
+        fecha4.setMonth(0);
+        fecha4.setYear(0);
+        nivelaca="Maestria";
+         especialidad=3;
+         
+    }
+
+menu.antecedentes(tfprograma1.getText(), tfinstituto1.getText(),tfestado1.getText(),fecha2, 
+ tfprograma2.getText(), tfinstituto2.getText(),tfestado2.getText(),fecha3,
+ tfprograma3.getText(), tfinstituto3.getText(),tfestado3.getText(),fecha4, nivelaca,especialidad);
+            
     }//GEN-LAST:event_btguardarantecedentesActionPerformed
 
     private void rbmaestriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbmaestriaActionPerformed
@@ -1741,6 +1799,9 @@ public class menuprueba extends javax.swing.JFrame {
             tfestado2.enable(true);
             JDfechagraduacion2.setEnabled(true);;
         }
+        
+      
+
     }//GEN-LAST:event_rbespecialidadActionPerformed
 
     private void tfnomacadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfnomacadeActionPerformed
@@ -1801,56 +1862,6 @@ java.sql.Date fecha = new java.sql.Date(d);
  menu.solicitante(tfnom22.getText(),tfapep.getText(),tfapem.getText(),tfcalle.getText(),tfnoext.getText(),tfnoint.getText(),tfcolonia.getText(),
  tfmunicipioalca.getText(),cp,tfestado.getText(),tfpais.getText(),telcasa,telcelular,sexo,tfcorreo1.getText(),tfcorreo2.getText(),tfdiscapacidad.getText(),
  tflenguaext.getText(),tfnomacade.getText(),fecha);
-
-//tranformar el tipo date con un formato correcto para la BD
-//nivel licenciatura
-Date date2 = JDfechagraduacion1.getDate();
-long d2 = date2.getTime();
-java.sql.Date fecha2 = new java.sql.Date(d2);
-
-//tranformar el tipo date con un formato correcto para la BD
-//nivel especialidad
-Date date3 = JDfechagraduacion2.getDate();
-long d3 = date3.getTime();
-java.sql.Date fecha3 = new java.sql.Date(d3);
-
-//tranformar el tipo date con un formato correcto para la BD
-//nivel maestria
-Date date4 = JDfechagraduacion2.getDate();
-long d4 = date4.getTime();
-java.sql.Date fecha4 = new java.sql.Date(d4);
-
-//Nivel academico variable para usarse en la BD
-String nivelaca="";
-
-//Validacion de RB de especialidad y maestria
-if(rbespecialidad.isSelected()){
-        System.out.println("");
-        tfprograma2.setText("");
-        tfinstituto2.setText("");
-        tfestado2.setText("");
-        fecha3.setDate(0);
-        fecha3.setMonth(0);
-        fecha3.setYear(0);
-        nivelaca="Especialidad";
-    }
-if(rbmaestria.isSelected()){
-        System.out.println("");
-        tfprograma3.setText("");
-        tfinstituto3.setText("");
-        tfestado3.setText("");
-        fecha4.setDate(0);
-        fecha4.setMonth(0);
-        fecha4.setYear(0);
-        nivelaca="Maestria";
-    }
-
- menu.antecedentes(tfprograma1.getText(), tfinstituto1.getText(),tfestado1.getText(),fecha2, 
- tfprograma2.getText(), tfinstituto2.getText(),tfestado2.getText(),fecha3,
- tfprograma3.getText(), tfinstituto3.getText(),tfestado3.getText(),fecha4, nivelaca);
-
-        
-
 
 //Codigo para desabilitar los campos despues de guardar
         tfcolonia.enable(false);
