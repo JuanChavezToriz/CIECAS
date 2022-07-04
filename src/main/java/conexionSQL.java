@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public class conexionSQL {
    static Connection conectar = null; 
    
-   public  Connection conexion(){
+   public static Connection conexion(){
         try {
             Class.forName("com.mysql.jdbc.Driver");
              conectar=DriverManager.getConnection("jdbc:mysql://localhost/ciecasdb","root","root");
