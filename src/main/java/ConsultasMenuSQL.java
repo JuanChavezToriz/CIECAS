@@ -32,14 +32,14 @@ public class ConsultasMenuSQL extends conexionSQL{
   
 //metodo para datos del solicitante
    public void solicitante(String tfnom22,String tfapep,String tfapem,String tfcalle,String tfnoext,String tfnoint,String tfcolonia,
- String tfmunicipioalca,int tfcp,String tfestado,String tfpais, int tftelcasa,int tftelcelular,int sexo,
+ String tfmunicipioalca,int tfcp,String tfestado,String tfpais, String tftelcasa, String tftelcelular,int sexo,
  String tfcorreo1,String tfcorreo2,String tfdiscapacidad,String tflenguaext,String tfnomacade, Date jdfechanaci){
 //ESTO ES UNICAMENTE A LA TABLA SOLICITANTE
       try {   
  ps = cn.prepareStatement("INSERT INTO solicitante (Nom_Solic, AP_Solic , AM_Solic,FN_Solic,Sexo_Solic) VALUES (?,?,?,?,?)");
             String datos[]=new String[4];
           DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");       
-		String dateToStr = dateFormat.format(jdfechanaci); 
+	String dateToStr = dateFormat.format(jdfechanaci); 
 
                ps.setString(1, tfnom22);
                ps.setString(2, tfapep);
@@ -90,8 +90,8 @@ try {
  
  ps = cn.prepareStatement("INSERT INTO contacto (TEC_Conta, TEM_Conta, C1_Conta, C2_Conta) VALUES (?,?,?,?)");
  
-               ps.setInt(1, tftelcasa);
-               ps.setInt(2, tftelcelular);
+               ps.setString(1, tftelcasa);
+               ps.setString(2, tftelcelular);
                ps.setString(3, tfcorreo1);
                ps.setString(4, tfcorreo2);
                

@@ -312,21 +312,20 @@
                                               </Group>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="-2" pref="379" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="1" attributes="0">
-                                                  <Component id="tfnomacade" min="-2" pref="420" max="-2" attributes="0"/>
-                                                  <Group type="102" attributes="0">
-                                                      <Component id="tfdiscapacidad" min="-2" pref="191" max="-2" attributes="0"/>
-                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                      <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="tflenguaext" alignment="0" min="-2" pref="191" max="-2" attributes="0"/>
-                                                          <Group type="102" alignment="0" attributes="0">
-                                                              <EmptySpace pref="18" max="-2" attributes="0"/>
-                                                              <Component id="jLabel20" min="-2" pref="153" max="-2" attributes="0"/>
-                                                          </Group>
-                                                      </Group>
+                                              <EmptySpace min="-2" pref="405" max="-2" attributes="0"/>
+                                              <Component id="tfdiscapacidad" min="-2" pref="191" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="tflenguaext" alignment="0" min="-2" pref="191" max="-2" attributes="0"/>
+                                                  <Group type="102" alignment="0" attributes="0">
+                                                      <EmptySpace pref="18" max="-2" attributes="0"/>
+                                                      <Component id="jLabel20" min="-2" pref="153" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
+                                          </Group>
+                                          <Group type="102" alignment="1" attributes="0">
+                                              <Component id="jcprograma" min="-2" pref="330" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -342,16 +341,16 @@
                               <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="jLabel23" min="-2" pref="272" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="146" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="172" max="-2" attributes="0"/>
                               <Component id="btneditar" min="-2" pref="152" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="btnguardarycontinuar" min="-2" pref="153" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="218" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="jLabel23" min="-2" pref="272" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="120" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
@@ -500,11 +499,11 @@
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                               <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="tfnomacade" min="-2" pref="43" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                              <Component id="jcprograma" min="-2" pref="31" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="btnguardarycontinuar" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btneditar" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -836,14 +835,6 @@
                         <Property name="text" type="java.lang.String" value="Nombre del Programa Acad&#xe9;mico de Posgrado"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="tfnomacade">
-                      <Properties>
-                        <Property name="toolTipText" type="java.lang.String" value="Introduce el programa acad&#xe9;mico"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfnomacadeActionPerformed"/>
-                      </Events>
-                    </Component>
                     <Component class="com.toedter.calendar.JDateChooser" name="jdfechanaci">
                       <Properties>
                         <Property name="toolTipText" type="java.lang.String" value="Introduce la fecha de nacimiento"/>
@@ -883,6 +874,21 @@
                         <Property name="text" type="java.lang.String" value="REGISTRO DE LOS DATOS DEL SOLICITANTE"/>
                         <Property name="horizontalTextPosition" type="int" value="0"/>
                       </Properties>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="jcprograma">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="4">
+                            <StringItem index="0" value="Item 1"/>
+                            <StringItem index="1" value="Item 2"/>
+                            <StringItem index="2" value="Item 3"/>
+                            <StringItem index="3" value="Item 4"/>
+                          </StringArray>
+                        </Property>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                      </AuxValues>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -1431,46 +1437,48 @@
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                                              <Component id="SUBTITULO8" min="-2" pref="162" max="-2" attributes="0"/>
-                                          </Group>
                                           <Component id="jScrollPane2" alignment="0" pref="864" max="32767" attributes="0"/>
                                           <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="SUBTITULO6" alignment="0" min="-2" pref="233" max="-2" attributes="0"/>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="tfprograma4" min="-2" pref="193" max="-2" attributes="0"/>
-                                                  <Group type="102" alignment="1" attributes="0">
-                                                      <Component id="jLabel41" min="-2" pref="146" max="-2" attributes="0"/>
-                                                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="tfinstituto4" alignment="0" min="-2" pref="193" max="-2" attributes="0"/>
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                                      <Component id="jLabel42" min="-2" pref="146" max="-2" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                                      <Component id="tfestado4" min="-2" pref="193" max="-2" attributes="0"/>
-                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                      <Component id="btneditarante1" min="-2" pref="137" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                                                      <Component id="jLabel43" min="-2" pref="146" max="-2" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                          </Group>
                                           <Group type="102" attributes="0">
-                                              <Component id="SUBTITULO16" min="-2" pref="158" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Group type="102" alignment="0" attributes="0">
+                                                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                                                      <Component id="SUBTITULO8" min="-2" pref="162" max="-2" attributes="0"/>
+                                                  </Group>
+                                                  <Component id="SUBTITULO6" alignment="0" min="-2" pref="233" max="-2" attributes="0"/>
+                                                  <Group type="102" alignment="0" attributes="0">
+                                                      <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Component id="tfprograma4" min="-2" pref="193" max="-2" attributes="0"/>
+                                                          <Group type="102" alignment="1" attributes="0">
+                                                              <Component id="jLabel41" min="-2" pref="146" max="-2" attributes="0"/>
+                                                              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                                                          </Group>
+                                                      </Group>
+                                                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Component id="tfinstituto4" alignment="0" min="-2" pref="193" max="-2" attributes="0"/>
+                                                          <Group type="102" alignment="0" attributes="0">
+                                                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                                                              <Component id="jLabel42" min="-2" pref="146" max="-2" attributes="0"/>
+                                                          </Group>
+                                                      </Group>
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Group type="102" alignment="0" attributes="0">
+                                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                              <Component id="tfestado4" min="-2" pref="193" max="-2" attributes="0"/>
+                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <Component id="btneditarante1" min="-2" pref="137" max="-2" attributes="0"/>
+                                                          </Group>
+                                                          <Group type="102" alignment="0" attributes="0">
+                                                              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                                                              <Component id="jLabel43" min="-2" pref="146" max="-2" attributes="0"/>
+                                                          </Group>
+                                                      </Group>
+                                                  </Group>
+                                                  <Component id="SUBTITULO16" min="-2" pref="158" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <EmptySpace min="0" pref="3" max="32767" attributes="0"/>

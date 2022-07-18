@@ -142,12 +142,12 @@ public class menuprueba extends javax.swing.JFrame {
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
-        tfnomacade = new javax.swing.JTextField();
         jdfechanaci = new com.toedter.calendar.JDateChooser();
         jLabel24 = new javax.swing.JLabel();
         tfpais = new javax.swing.JTextField();
         tfestado = new javax.swing.JTextField();
         SUBTITULO13 = new javax.swing.JLabel();
+        jcprograma = new javax.swing.JComboBox<>();
         jDesktopPane2 = new javax.swing.JDesktopPane();
         jPanel3 = new javax.swing.JPanel();
         SUBTITULO5 = new javax.swing.JLabel();
@@ -439,13 +439,6 @@ public class menuprueba extends javax.swing.JFrame {
         jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel23.setText("Nombre del Programa Académico de Posgrado");
 
-        tfnomacade.setToolTipText("Introduce el programa académico");
-        tfnomacade.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfnomacadeActionPerformed(evt);
-            }
-        });
-
         jdfechanaci.setToolTipText("Introduce la fecha de nacimiento");
         jdfechanaci.setDateFormatString("dd MM yyyy");
         jdfechanaci.setMinSelectableDate(new java.util.Date(-62135744288000L));
@@ -470,6 +463,8 @@ public class menuprueba extends javax.swing.JFrame {
         SUBTITULO13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         SUBTITULO13.setText("REGISTRO DE LOS DATOS DEL SOLICITANTE");
         SUBTITULO13.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        jcprograma.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -594,17 +589,17 @@ public class menuprueba extends javax.swing.JFrame {
                                             .addComponent(rbmasc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(rbfeme, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(379, 379, 379)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(tfnomacade, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(405, 405, 405)
+                                .addComponent(tfdiscapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tflenguaext, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(tfdiscapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(tflenguaext, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jcprograma, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(22, 22, 22))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addComponent(SUBTITULO3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -613,15 +608,15 @@ public class menuprueba extends javax.swing.JFrame {
                         .addComponent(SUBTITULO13, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(66, 66, 66))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(146, 146, 146))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(172, 172, 172)
                 .addComponent(btneditar, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnguardarycontinuar, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(218, 218, 218))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(120, 120, 120))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(170, 170, 170)
@@ -732,11 +727,11 @@ public class menuprueba extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel20)
                             .addComponent(jLabel19))))
-                .addGap(33, 33, 33)
+                .addGap(38, 38, 38)
                 .addComponent(jLabel23)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfnomacade, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addComponent(jcprograma, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnguardarycontinuar)
                     .addComponent(btneditar))
@@ -1227,37 +1222,38 @@ public class menuprueba extends javax.swing.JFrame {
                                 .addGap(15, 15, 15))))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(SUBTITULO8, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 864, Short.MAX_VALUE)
                             .addComponent(jScrollPane1)
-                            .addComponent(SUBTITULO6, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tfprograma4, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                        .addComponent(jLabel41, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(22, 22, 22)))
-                                .addGap(28, 28, 28)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tfinstituto4, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addGap(26, 26, 26)
-                                        .addComponent(jLabel42, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(tfestado4, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btneditarante1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(24, 24, 24)
+                                        .addComponent(SUBTITULO8, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(SUBTITULO6, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel4Layout.createSequentialGroup()
-                                        .addGap(36, 36, 36)
-                                        .addComponent(jLabel43, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(SUBTITULO16, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(22, 22, 22)))
+                                        .addGap(44, 44, 44)
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(tfprograma4, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                                .addComponent(jLabel41, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(22, 22, 22)))
+                                        .addGap(28, 28, 28)
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(tfinstituto4, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                                .addGap(26, 26, 26)
+                                                .addComponent(jLabel42, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                                .addGap(18, 18, 18)
+                                                .addComponent(tfestado4, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(btneditarante1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                                .addGap(36, 36, 36)
+                                                .addComponent(jLabel43, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(SUBTITULO16, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGap(0, 3, Short.MAX_VALUE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1528,10 +1524,6 @@ public class menuprueba extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfpaisActionPerformed
 
-    private void tfnomacadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfnomacadeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfnomacadeActionPerformed
-
     private void btneditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneditarActionPerformed
         tfnom22.enable(true);
         tfapep.enable(true);
@@ -1552,15 +1544,11 @@ public class menuprueba extends javax.swing.JFrame {
         tfcorreo2.enable(true);
         tfdiscapacidad.enable(true);
         tflenguaext.enable(true);
-        tfnomacade.enable(true);
         jdfechanaci.setEnabled(true);
     }//GEN-LAST:event_btneditarActionPerformed
 
     private void btnguardarycontinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarycontinuarActionPerformed
-
-
-        
-        //boton de guardar y continuar
+  //boton de guardar y continuar
         //boton para elegir el sexo
         int sexo=0;
         //variables para convertir un string a un entero
@@ -1584,28 +1572,57 @@ public class menuprueba extends javax.swing.JFrame {
         ConsultasMenuSQL menu= new ConsultasMenuSQL();
         //convertir un string a entero
         cp=Integer.parseInt(tfcp.getText());
-        telcasa=Integer.parseInt(tftelcasa.getText());
-        telcelular=Integer.parseInt(tftelcelular.getText());
+        Date fechaprueba = new Date(0,0,0);
+        System.out.println(fechaprueba);
+       
+        
+        
+        
         //Validacion de # interior y exterior
-        if(tfnoext.getText().equals(null) || tfnoext.getText().equalsIgnoreCase("")){
+        if(tfnoext.getText().isEmpty() || tfnoext.getText().equalsIgnoreCase("")){
             numeroEXT = "0";
-        } else if(tfnoint.getText().equals(null) || tfnoint.getText().equalsIgnoreCase("")){
+        } else if(tfnoint.getText().isEmpty() || tfnoint.getText().equalsIgnoreCase("")){
             numeroINT = "0";
         }
         
-        if(tfnom22.getText().isEmpty() || tfapep.getText().isEmpty() || tfapem.getText().isEmpty() || fecha.equals(null)){
+        if(tfnom22.getText().isEmpty() || tfapep.getText().isEmpty() || tfapem.getText().isEmpty() || fecha.before(fechaprueba)){
             
-            JOptionPane.showMessageDialog(null, "Por favor llene los campos obligatorios correctamente");
+            JOptionPane.showMessageDialog(null, "Por favor llene los campos del soliciante correctamente");
             tfnom22.setBackground(Color.red);
             tfapep.setBackground(Color.red);
             tfapem.setBackground(Color.red);
             jdfechanaci.setBackground(Color.red);
+        } else 
+        if(tfcalle.getText().isEmpty() || tfcolonia.getText().isEmpty() || tfmunicipioalca.getText().isEmpty()
+          || tfcp.getText().isEmpty() || tfestado.getText().isEmpty() || tfpais.getText().isEmpty() ){
+            
+            JOptionPane.showMessageDialog(null, "Por favor llene los campos la dirección correctamente");
+            tfcalle.setBackground(Color.red);
+            tfcolonia.setBackground(Color.red);
+            tfmunicipioalca.setBackground(Color.red);
+            tfcp.setBackground(Color.red);
+            tfestado.setBackground(Color.red);
+            tfpais.setBackground(Color.red);
+            tfnoext.setBackground(Color.red);
+            tfnoint.setBackground(Color.red);
         }
+        else 
+        if(tftelcasa.getText().isEmpty() || tftelcelular.getText().isEmpty() || tfcorreo1.getText().isEmpty()
+          || tfcp.getText().isEmpty()){
+            
+            JOptionPane.showMessageDialog(null, "Por favor llene los campos de contacto correctamente");
+            tftelcasa.setBackground(Color.red);
+            tftelcelular.setBackground(Color.red);
+            tfcorreo1.setBackground(Color.red);
+        
+        }
+           
         
         //Pasamos los parametros de nuestras variables al metodo de la clase ConsultasMenuSQL
         menu.solicitante(tfnom22.getText(),tfapep.getText(),tfapem.getText(),tfcalle.getText(),numeroEXT,numeroINT,tfcolonia.getText(),
-            tfmunicipioalca.getText(),cp,tfestado.getText(),tfpais.getText(),telcasa,telcelular,sexo,tfcorreo1.getText(),tfcorreo2.getText(),tfdiscapacidad.getText(),tflenguaext.getText(),tfnomacade.getText(),fecha);
-        
+            tfmunicipioalca.getText(),cp,tfestado.getText(),tfpais.getText(),tftelcasa.getText(),tftelcelular.getText(),
+            sexo,tfcorreo1.getText(),tfcorreo2.getText(),tfdiscapacidad.getText(),tflenguaext.getText(),jcprograma.getItemAt(sexo).toString(),fecha);
+        //jcprograma FALTA MODIFICAR
        
        
         
@@ -1629,7 +1646,7 @@ public class menuprueba extends javax.swing.JFrame {
         tfcorreo2.enable(false);
         tfdiscapacidad.enable(false);
         tflenguaext.enable(false);
-        tfnomacade.enable(false);
+        jcprograma.enable(false);
         jdfechanaci.setEnabled(false);
     }//GEN-LAST:event_btnguardarycontinuarActionPerformed
 
@@ -1820,6 +1837,7 @@ public class menuprueba extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JComboBox<String> jcprograma;
     private com.toedter.calendar.JDateChooser jdfechanaci;
     private javax.swing.JRadioButton rbespecialidad;
     private javax.swing.JRadioButton rbfeme;
@@ -1853,7 +1871,6 @@ public class menuprueba extends javax.swing.JFrame {
     private javax.swing.JTextField tfnoext;
     private javax.swing.JTextField tfnoint;
     private javax.swing.JTextField tfnom22;
-    private javax.swing.JTextField tfnomacade;
     private javax.swing.JTextField tfpais;
     private javax.swing.JTextField tfprograma1;
     private javax.swing.JTextField tfprograma2;
