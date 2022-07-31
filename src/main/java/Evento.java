@@ -1,8 +1,21 @@
+
+import com.toedter.calendar.JTextFieldDateEditor;
+import java.io.File;
+import java.io.FileInputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Calendar;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author estme
@@ -12,9 +25,184 @@ public class Evento extends javax.swing.JFrame {
     /**
      * Creates new form Administracion
      */
+    conexionSQL cc = new conexionSQL();
+    Connection con = cc.conexion();
+
     public Evento() {
         initComponents();
         this.setLocationRelativeTo(null);
+        JTextFieldDateEditor editor = (JTextFieldDateEditor) jdFechaEvento.getDateEditor();
+        editor.setEditable(false);
+        mostrarDatos();
+    }
+
+    public void guardarEvento(String[] datos) {
+
+        String SQL = "CALL `sp_guardar_evento`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(SQL);
+            ps.setString(1, datos[3]);
+            ps.setString(2, datos[4]);
+            ps.setString(3, "0");
+            ps.setString(4, datos[0]);
+            ps.setString(5, datos[1]);
+            ps.setString(6, datos[2]);
+            ps.setString(7, datos[5]);
+            ps.setString(8, datos[6]);
+            ps.setString(9, datos[7]);
+            ps.setString(10, datos[8]);
+
+            int res = ps.executeUpdate();
+
+            String[] split = datos[9].split(",");
+            File file = null;
+            FileInputStream fi = null;
+            int res2 = 0;
+            try {
+            for (int i = 0; i < split.length  ; i++) {
+                System.out.println(split[i]);
+                file = new File(split[i]);
+                fi = new FileInputStream(file);
+                System.out.println(fi);
+                SQL = "CALL `sp_guardar_imagen`(?)";
+                ps = con.prepareStatement(SQL);
+                ps.setBinaryStream(1, fi);
+                res2 = ps.executeUpdate();
+                
+             
+               
+
+            }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error al guardar una Imagen");
+                }
+
+    
+
+            if (res > 0 && res2 > 0) {
+                JOptionPane.showMessageDialog(null, "Evento Guardado");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al guardar");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error:" + ex.getMessage());
+        }
+        mostrarDatos();
+
+    }
+
+    public void filtrarDatosEventos(String valor) {
+
+        String[] titulos = {"ID del Evento", "Nombre del Evento", "Organizador", "Institución de Procedencia"};
+        String[] registros = new String[4];
+
+        DefaultTableModel modelo = new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+        };
+
+        String SQL = "select e.ID_evento, e.Nom_evento, o.Nom_Ogani, o.InP_Organi from evento e INNER JOIN organizador_evento o on e.ID_evento = o.ID_evento where concat(Nom_Ogani, ' ',Nom_evento,' ', InP_Organi) like '%"+ valor +"%'";
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(SQL);
+            while (rs.next()) {
+
+                registros[0] = rs.getString("ID_evento");
+                registros[1] = rs.getString("Nom_evento");
+                registros[2] = rs.getString("Nom_Ogani");
+                registros[3] = rs.getString("InP_Organi");
+                modelo.addRow(registros);
+
+            }
+
+            tablaEventos.setModel(modelo);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al Mostrar Datos" + ex.getMessage());
+        }
+
+    }
+
+    public void mostrarDatos() {
+
+        String[] titulos = {"ID del Evento", "Nombre del Evento", "Organizador", "Institución de Procedencia"};
+        String[] registros = new String[4];
+
+        DefaultTableModel modelo = new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+        };
+
+        String SQL = "select e.ID_evento, e.Nom_evento, o.Nom_Ogani, o.InP_Organi from evento e INNER JOIN organizador_evento o on e.ID_evento = o.ID_evento ";
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(SQL);
+            while (rs.next()) {
+
+                registros[0] = rs.getString("ID_evento");
+                registros[1] = rs.getString("Nom_evento");
+                registros[2] = rs.getString("Nom_Ogani");
+                registros[3] = rs.getString("InP_Organi");
+                modelo.addRow(registros);
+
+            }
+
+            tablaEventos.setModel(modelo);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al Mostrar Datos" + ex.getMessage());
+        }
+
+    }
+    
+    public void mostrarInformacionEvento(String valorID){
+          try{
+            
+            String[] registros = new String[14];
+            
+            String SQL = "select s.FN_Solic,s.Sexo_Solic,d.Call_Domic,d.NE_Domic,d.NI_Domic,d.Col_Domic,d.MD_Domic,d.CP_Domic,d.Est_Domic,d.Pai_Domic,c.TEC_Conta,"
+                         + "c.TEM_Conta,c.C1_Conta,c.C2_Conta from solicitante s inner join domicilio d on s.ID_Solic = d .ID_Solic inner join contacto c "
+                         + "on s.ID_Solic = c .ID_Solic where s.Bol_Solic = ?";
+            
+            PreparedStatement pst = con.prepareStatement(SQL);
+            pst.setString(1, valorID.trim());
+            ResultSet rs = pst.executeQuery();
+            
+            if(rs.next()){
+                registros[0] = rs.getString("s.FN_Solic");
+                registros[1] = rs.getString("s.Sexo_Solic");
+                registros[2] = rs.getString("d.Call_Domic");
+                registros[3] = rs.getString("d.NE_Domic");
+                registros[4] = rs.getString("d.NI_Domic");
+                registros[5] = rs.getString("d.Col_Domic");
+                registros[6] = rs.getString("d.MD_Domic");
+                registros[7] = rs.getString("d.Est_Domic");
+                registros[8] = rs.getString("d.Pai_Domic");
+                registros[9] = rs.getString("c.TEC_Conta");
+                registros[10] = rs.getString("c.TEM_Conta");
+                registros[11] = rs.getString("c.C1_Conta");
+                registros[12] = rs.getString("c.C2_Conta");
+                registros[13] = rs.getString("d.CP_Domic");
+            }
+            
+            
+            
+            
+            
+            JOptionPane.showMessageDialog(null, 
+                     "", "DATOS DEL EGRESADO",JOptionPane.INFORMATION_MESSAGE);
+        
+        }catch (Exception ex) {
+            JOptionPane.showMessageDialog(null,"Error:" + ex.getMessage());
+        }
+        
     }
 
     /**
@@ -37,30 +225,31 @@ public class Evento extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField3 = new javax.swing.JTextField();
+        txtNomOrganizador = new javax.swing.JTextField();
+        txtInsProcedencia = new javax.swing.JTextField();
+        cbTipoPar = new javax.swing.JComboBox<>();
+        txtNomEvento = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jTextField5 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        txtDesEvento = new javax.swing.JTextArea();
+        txtImportarImagen = new javax.swing.JTextField();
+        btnSelecImg = new javax.swing.JButton();
+        btnGuarEve = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cbEFES = new javax.swing.JComboBox<>();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
-        jdfechanaci = new com.toedter.calendar.JDateChooser();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        txtObjetivo = new javax.swing.JTextArea();
+        jdFechaEvento = new com.toedter.calendar.JDateChooser();
+        cbTipoEvent = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jPanel23 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaEventos = new javax.swing.JTable();
         jButton5 = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jTextField7 = new javax.swing.JTextField();
-        jButton6 = new javax.swing.JButton();
+        btnMasInfo = new javax.swing.JButton();
+        btnImagenes = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
 
@@ -101,40 +290,47 @@ public class Evento extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Verdana", 1, 11)); // NOI18N
         jLabel8.setText("Importar Imagen:");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtNomOrganizador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtNomOrganizadorActionPerformed(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Alumno", "Profesor", "Administrativo", "Funcionario" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cbTipoPar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Alumno", "Profesor", "Administrativo", "Funcionario" }));
+        cbTipoPar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                cbTipoParActionPerformed(evt);
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+        txtNomEvento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
+                txtNomEventoActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Seleccionar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        txtDesEvento.setColumns(20);
+        txtDesEvento.setRows(5);
+        jScrollPane1.setViewportView(txtDesEvento);
+
+        txtImportarImagen.setEditable(false);
+        txtImportarImagen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                txtImportarImagenActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Guardar Evento");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnSelecImg.setText("Seleccionar");
+        btnSelecImg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnSelecImgActionPerformed(evt);
+            }
+        });
+
+        btnGuarEve.setText("Guardar Evento");
+        btnGuarEve.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuarEveActionPerformed(evt);
             }
         });
 
@@ -144,24 +340,24 @@ public class Evento extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Verdana", 1, 11)); // NOI18N
         jLabel11.setText("EFES:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        cbEFES.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4" }));
+        cbEFES.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                cbEFESActionPerformed(evt);
             }
         });
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane4.setViewportView(jTextArea3);
+        txtObjetivo.setColumns(20);
+        txtObjetivo.setRows(5);
+        jScrollPane4.setViewportView(txtObjetivo);
 
-        jdfechanaci.setToolTipText("Introduce la fecha de nacimiento");
-        jdfechanaci.setMinSelectableDate(new java.util.Date(-62135744288000L));
+        jdFechaEvento.setToolTipText("Introduce la fecha a llevarse a cabo el evento.");
+        jdFechaEvento.setMinSelectableDate(new java.util.Date(-62135744288000L));
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Académico", "Vinculación", "Red de género", "Derechos humanos", "A lo largo de la vida" }));
-        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
+        cbTipoEvent.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Académico", "Vinculación", "Red de género", "Derechos humanos", "A lo largo de la vida" }));
+        cbTipoEvent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox3ActionPerformed(evt);
+                cbTipoEventActionPerformed(evt);
             }
         });
 
@@ -171,44 +367,34 @@ public class Evento extends javax.swing.JFrame {
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addGap(352, 352, 352)
-                .addComponent(jButton3)
+                .addComponent(btnGuarEve)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addGap(171, 171, 171)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel16Layout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtImportarImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)
+                        .addComponent(btnSelecImg)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
                         .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel16Layout.createSequentialGroup()
-                                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel11))
-                                .addGap(43, 43, 43)
-                                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel16Layout.createSequentialGroup()
-                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(jScrollPane4)))
                             .addComponent(jScrollPane1)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel16Layout.createSequentialGroup()
+                                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6))
+                                .addGap(43, 43, 43)
+                                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jdFechaEvento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel16Layout.createSequentialGroup()
+                                        .addComponent(cbTipoEvent, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel16Layout.createSequentialGroup()
                                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel16Layout.createSequentialGroup()
-                                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel6))
-                                        .addGap(43, 43, 43)
-                                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jdfechanaci, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addGroup(jPanel16Layout.createSequentialGroup()
-                                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE))))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel16Layout.createSequentialGroup()
                                         .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel2)
@@ -217,12 +403,19 @@ public class Evento extends javax.swing.JFrame {
                                             .addComponent(jLabel4))
                                         .addGap(18, 18, 18)
                                         .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jTextField1)
-                                            .addComponent(jTextField2)
-                                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(17, 17, 17)))
-                        .addGap(170, 170, 170))))
+                                            .addComponent(cbTipoPar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtNomOrganizador)
+                                            .addComponent(txtInsProcedencia)
+                                            .addComponent(txtNomEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel16Layout.createSequentialGroup()
+                                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel10)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel11))
+                                        .addGap(43, 43, 43)
+                                        .addComponent(cbEFES, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(131, 131, 131))))
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,34 +423,34 @@ public class Evento extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNomOrganizador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtInsProcedencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbTipoPar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNomEvento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
-                    .addComponent(jdfechanaci, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jdFechaEvento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbTipoEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel10)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbEFES, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
@@ -266,10 +459,10 @@ public class Evento extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(txtImportarImagen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSelecImg))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(btnGuarEve)
                 .addContainerGap())
         );
 
@@ -296,16 +489,16 @@ public class Evento extends javax.swing.JFrame {
 
         jPanel23.setAutoscrolls(true);
 
-        jTable1.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaEventos.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        tablaEventos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nombre de Participante", "Nombre del Evento", "Fecha", "Tipo Participante"
+
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tablaEventos);
 
         jButton5.setText("Generar Archivo PDF");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -322,8 +515,25 @@ public class Evento extends javax.swing.JFrame {
                 jTextField7ActionPerformed(evt);
             }
         });
+        jTextField7.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField7KeyReleased(evt);
+            }
+        });
 
-        jButton6.setText("Buscar");
+        btnMasInfo.setText("Más Información");
+        btnMasInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMasInfoActionPerformed(evt);
+            }
+        });
+
+        btnImagenes.setText("Descargar Imágenes");
+        btnImagenes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImagenesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel23Layout = new javax.swing.GroupLayout(jPanel23);
         jPanel23.setLayout(jPanel23Layout);
@@ -334,31 +544,35 @@ public class Evento extends javax.swing.JFrame {
                 .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel23Layout.createSequentialGroup()
                         .addComponent(jButton5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnMasInfo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnImagenes)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel23Layout.createSequentialGroup()
                         .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel23Layout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton6))
+                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(38, Short.MAX_VALUE))))
+                        .addContainerGap(37, Short.MAX_VALUE))))
         );
         jPanel23Layout.setVerticalGroup(
             jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel23Layout.createSequentialGroup()
                 .addGap(49, 49, 49)
                 .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
                     .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
-                .addGap(33, 33, 33)
+                .addGap(35, 35, 35)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel23Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton5)
+                    .addComponent(btnMasInfo)
+                    .addComponent(btnImagenes))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -419,13 +633,13 @@ public class Evento extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtNomOrganizadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomOrganizadorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtNomOrganizadorActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void cbTipoParActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoParActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_cbTipoParActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
@@ -435,25 +649,94 @@ public class Evento extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField7ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnGuarEveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuarEveActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+        JTextFieldDateEditor editor = (JTextFieldDateEditor) jdFechaEvento.getDateEditor();
+        if (txtNomOrganizador.getText().trim().isEmpty() || txtInsProcedencia.getText().trim().isEmpty() || txtNomEvento.getText().trim().isEmpty() || editor.getText().isEmpty()
+                || txtObjetivo.getText().trim().isEmpty() || txtDesEvento.getText().trim().isEmpty() || txtImportarImagen.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Introduce todos los datos");
+        } else {
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+            String dia = Integer.toString(jdFechaEvento.getCalendar().get(Calendar.DAY_OF_MONTH));
+            String mes = Integer.toString(jdFechaEvento.getCalendar().get(Calendar.MONTH) + 1);
+            String year = Integer.toString(jdFechaEvento.getCalendar().get(Calendar.YEAR));
+            String fecha = (year + "-" + mes + "-" + dia);
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+            String[] datos = new String[10];
+            datos[0] = txtNomOrganizador.getText();
+            datos[1] = txtInsProcedencia.getText();
+            datos[2] = (String) cbTipoPar.getSelectedItem();
+            datos[3] = txtNomEvento.getText();
+            datos[4] = fecha;
+            datos[5] = (String) cbTipoEvent.getSelectedItem();
+            datos[6] = txtObjetivo.getText();
+            datos[7] = (String) cbEFES.getSelectedItem();
+            datos[8] = txtDesEvento.getText();
+            datos[9] = txtImportarImagen.getText();
+            guardarEvento(datos);
+        }
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
 
-    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
+    }//GEN-LAST:event_btnGuarEveActionPerformed
+
+    private void txtImportarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtImportarImagenActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox3ActionPerformed
+    }//GEN-LAST:event_txtImportarImagenActionPerformed
+
+    private void btnSelecImgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecImgActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.PNG", "png", "*.JPG", "jpg", "*.JPEG", "jpeg");
+        fc.setFileFilter(filtro);
+        fc.setMultiSelectionEnabled(true);
+
+        int seleccion = fc.showOpenDialog(this);
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+            File[] files = fc.getSelectedFiles();
+            for (int i = 0; i < files.length; i++) {
+
+                String contenido = txtImportarImagen.getText();
+                if (i + 1 < files.length) {
+                    contenido = contenido + files[i] + ",";
+                } else {
+                    contenido = contenido + files[i];
+                }
+
+                txtImportarImagen.setText(contenido);
+            }
+        }
+
+
+    }//GEN-LAST:event_btnSelecImgActionPerformed
+
+    private void cbEFESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbEFESActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbEFESActionPerformed
+
+    private void cbTipoEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoEventActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbTipoEventActionPerformed
+
+    private void txtNomEventoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomEventoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNomEventoActionPerformed
+
+    private void btnMasInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMasInfoActionPerformed
+        // TODO add your handling code here:
+        int filaSeleccionada = tablaEventos.getSelectedRow();
+        String valorID= (String) tablaEventos.getValueAt(filaSeleccionada, 0);
+        mostrarInformacionEvento(valorID);
+    }//GEN-LAST:event_btnMasInfoActionPerformed
+
+    private void btnImagenesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImagenesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnImagenesActionPerformed
+
+    private void jTextField7KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField7KeyReleased
+        // TODO add your handling code here:
+        filtrarDatosEventos(jTextField7.getText());
+    }//GEN-LAST:event_jTextField7KeyReleased
 
     /**
      * @param args the command line arguments
@@ -485,20 +768,21 @@ public class Evento extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Administracion().setVisible(true);
+                new Evento().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGuarEve;
+    private javax.swing.JButton btnImagenes;
+    private javax.swing.JButton btnMasInfo;
+    private javax.swing.JButton btnSelecImg;
+    private javax.swing.JComboBox<String> cbEFES;
+    private javax.swing.JComboBox<String> cbTipoEvent;
+    private javax.swing.JComboBox<String> cbTipoPar;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -519,14 +803,14 @@ public class Evento extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField7;
-    private com.toedter.calendar.JDateChooser jdfechanaci;
+    private com.toedter.calendar.JDateChooser jdFechaEvento;
+    private javax.swing.JTable tablaEventos;
+    private javax.swing.JTextArea txtDesEvento;
+    private javax.swing.JTextField txtImportarImagen;
+    private javax.swing.JTextField txtInsProcedencia;
+    private javax.swing.JTextField txtNomEvento;
+    private javax.swing.JTextField txtNomOrganizador;
+    private javax.swing.JTextArea txtObjetivo;
     // End of variables declaration//GEN-END:variables
 }

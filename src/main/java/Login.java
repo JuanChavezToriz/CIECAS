@@ -238,6 +238,13 @@ public class Login extends javax.swing.JFrame {
                             Evento frmprueba = new Evento();
                             this.dispose();
                             frmprueba.setVisible(true);
+                        }else{
+                            if(mod.getId_tipo() == 4){
+                            datos frmprueba = new datos();
+                            this.dispose();
+                            frmprueba.setVisible(true);
+                        }
+                        
                         }
                     }
                 }
