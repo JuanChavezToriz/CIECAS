@@ -19,12 +19,12 @@ import javax.swing.table.DefaultTableModel;
  * @author estme
  */
 public class Administracion extends javax.swing.JFrame {
-    
+    //Instancia y conexion a la base de datos.
     conexionSQL cc = new conexionSQL();
     Connection con = cc.conexion();
   
     /** 
-     * Creates new form Administracion
+     * Creates new form Administracion.
      */
     public Administracion() {
         initComponents();
@@ -33,12 +33,12 @@ public class Administracion extends javax.swing.JFrame {
         mostrarDatosInscritos();
         mostrarDatosEgresados();
     }
-    
+    //Metodo para mostrar los datos almacenados en la DB en la tabla del panel "Solicitud de Inscripción."
     public void mostrarDatos(){
     
         String[] titulos = {"ID del Solicitante", "Nombre","Programa Academico"};
         String[] registros = new String[3];
-        
+        //Se especifica que la información de la tabla no puede ser editada.
        DefaultTableModel modelo = new DefaultTableModel(null,titulos){
            @Override 
            public boolean isCellEditable(int row, int column){
@@ -46,10 +46,11 @@ public class Administracion extends javax.swing.JFrame {
            }
        
        };
-       
-       String SQL = "select s.ID_Solic, s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  where s.Clv_Prog = p.Clv_Prog";
+       //Asignación de la consulta a una String.
+       String SQL = "select s.ID_Solic, s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  where s.ID_Prog = p.ID_Prog";
        
        try{
+           //Se ejecuta la consulta y se almacenan los datos provenientes de la DB en un arreglo
            Statement st = con.createStatement();
            ResultSet rs = st.executeQuery(SQL);
            while(rs.next()){
@@ -65,14 +66,14 @@ public class Administracion extends javax.swing.JFrame {
                }
                
            }
-           
+           //Se llena la tabla
            tablaSolicitud.setModel(modelo);
        }catch (Exception ex) {
             JOptionPane.showMessageDialog(null,"Error al Mostrar Datos" + ex.getMessage()); 
         }
        
     }
-    
+    //Este método trabaja de forma similar a mostrarDatos, pero para la tabla del panel "Buscar Alumno Inscrito"
         public void mostrarDatosInscritos(){
     
         String[] titulos = {"Boleta del Alumno", "Nombre","Programa Academico"};
@@ -86,7 +87,7 @@ public class Administracion extends javax.swing.JFrame {
        
        };
        
-       String SQL = "select s.ID_Solic,s.Bol_Solic , s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  on s.Clv_Prog = p.Clv_Prog where Ins_Solic = 1";
+       String SQL = "select s.ID_Solic,s.Bol_Solic , s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  on s.ID_Prog = p.ID_Prog where Ins_Solic = 1";
        
        try{
            Statement st = con.createStatement();
@@ -110,7 +111,7 @@ public class Administracion extends javax.swing.JFrame {
         }
        
     }
-        
+    //Este método trabaja de forma similar a mostrarDatos, pero para la tabla del panel "Egresados"
     public void mostrarDatosEgresados(){
     
         String[] titulos = {"Boleta del Alumno", "Nombre","Programa Academico"};
@@ -124,7 +125,7 @@ public class Administracion extends javax.swing.JFrame {
        
        };
        
-       String SQL = "select s.ID_Solic,s.Bol_Solic , s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  on s.Clv_Prog = p.Clv_Prog where Egr_Solic = 1";
+       String SQL = "select s.ID_Solic,s.Bol_Solic , s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  on s.ID_Prog = p.ID_Prog where Egr_Solic = 1";
        
        try{
            Statement st = con.createStatement();
@@ -148,7 +149,7 @@ public class Administracion extends javax.swing.JFrame {
         }
        
     }
-    
+    //Metodo para filtrar los valores de la tabla de acuerdo al Nombre o apellidos de solicitante.
     public void filtrarDatosSolicitud(String valor){
     
         String[] titulos = {"ID del Solicitante", "Nombre","Programa Academico"};
@@ -161,8 +162,8 @@ public class Administracion extends javax.swing.JFrame {
            }
        
        };
-       
-       String SQL = "select s.ID_Solic, s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  on s.Clv_Prog = p.Clv_Prog where concat(Nom_Solic, ' ',AP_solic, ' ', AM_Solic) like '%"+ valor +"%'";
+       //Este metodo trabaja de la misma forma que el método mostrar Datos, solo que reliza una consulta más específica
+       String SQL = "select s.ID_Solic, s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  on s.ID_Prog = p.ID_Prog where concat(Nom_Solic, ' ',AP_solic, ' ', AM_Solic,' ', Bol_Solic) like '%"+ valor +"%'";
        
        try{
            Statement st = con.createStatement();
@@ -187,7 +188,7 @@ public class Administracion extends javax.swing.JFrame {
         }
        
     }
-    
+    //Este metodo es analago a filtrarDatosSolicitantes , pero para la tabla del panel "Buscar Alumno Inscrito"
      public void filtrarDatosInscritos(String valor){
     
         String[] titulos = {"Boleta del Alumno", "Nombre","Programa Academico"};
@@ -201,7 +202,7 @@ public class Administracion extends javax.swing.JFrame {
        
        };
        
-       String SQL = "select s.ID_Solic,s.Bol_Solic , s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  on s.Clv_Prog = p.Clv_Prog where Ins_Solic = 1 and concat(Nom_Solic, ' ',AP_solic, ' ', AM_Solic) like '%"+ valor +"%'";
+       String SQL = "select s.ID_Solic,s.Bol_Solic , s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  on s.ID_Prog = p.ID_Prog where Ins_Solic = 1 and concat(Nom_Solic, ' ',AP_solic, ' ', AM_Solic) like '%"+ valor +"%'";
        
        try{
            Statement st = con.createStatement();
@@ -226,7 +227,7 @@ public class Administracion extends javax.swing.JFrame {
         }
        
     }
-     
+     //Este metodo es analago a filtrarDatosSolicitantes , pero para la tabla del panel "Egresados"
      public void filtrarDatosEgresados(String valor){
     
         String[] titulos = {"Boleta del Alumno", "Nombre","Programa Academico"};
@@ -240,7 +241,7 @@ public class Administracion extends javax.swing.JFrame {
        
        };
        
-       String SQL = "select s.ID_Solic,s.Bol_Solic , s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  on s.Clv_Prog = p.Clv_Prog where Egr_Solic = 1 and concat(Nom_Solic, ' ',AP_solic, ' ', AM_Solic) like '%"+ valor +"%'";
+       String SQL = "select s.ID_Solic,s.Bol_Solic , s.Nom_Solic,s.AP_Solic,s.AM_Solic,s.Ins_Solic ,s.Egr_Solic, p.Nom_prog from solicitante s INNER JOIN programa_academico p  on s.ID_Prog = p.ID_Prog where Egr_Solic = 1 and concat(Nom_Solic, ' ',AP_solic, ' ', AM_Solic) like '%"+ valor +"%'";
        
        try{
            Statement st = con.createStatement();
@@ -268,21 +269,21 @@ public class Administracion extends javax.swing.JFrame {
 
      
     
-    
+    //Muestra información mas detallada de cada una de las solicitudes almacenadas
     public void mostrarInformacionSolicitud(String id){
     
         try{
             
             String[] registros = new String[14];
-            
+            //Asignación de la consulta a una String
             String SQL = "select s.FN_Solic,s.Sexo_Solic,d.Call_Domic,d.NE_Domic,d.NI_Domic,d.Col_Domic,d.MD_Domic,d.CP_Domic,d.Est_Domic,d.Pai_Domic,c.TEC_Conta,"
                          + "c.TEM_Conta,c.C1_Conta,c.C2_Conta from solicitante s inner join domicilio d on s.ID_Solic = d .ID_Solic inner join contacto c "
                          + "on s.ID_Solic = c .ID_Solic where s.ID_Solic = ?";
-            
+            //Se prepara y se ejecuta la consulta
             PreparedStatement pst = con.prepareStatement(SQL);
             pst.setString(1, id.trim());
             ResultSet rs = pst.executeQuery();
-            
+            //Se almacena la información en un arreglo
             if(rs.next()){
                 registros[0] = rs.getString("s.FN_Solic");
                 registros[1] = rs.getString("s.Sexo_Solic");
@@ -303,7 +304,7 @@ public class Administracion extends javax.swing.JFrame {
             
             
             
-            
+            //Muesra la información en un JOptionPane
             JOptionPane.showMessageDialog(null, 
                       "Edad: " + calcularEdad(registros[0])+
                       "\nSexo: " + conocerSexo(registros[1])+ 
@@ -325,7 +326,7 @@ public class Administracion extends javax.swing.JFrame {
     
     
     }
-    
+    //Este metodo es analago a mostrarInformacinSolicitud , pero para la tabla del panel "Inscritos"
      public void mostrarInformacionInscrito(String id){
     
         try{
@@ -382,7 +383,7 @@ public class Administracion extends javax.swing.JFrame {
     
     
     }
-     
+     //Este metodo es analago a mostrarInformacinSolicitud , pero para la tabla del panel "Egresados"
     public void mostrarInformacionEgresado(String id){
     
         try{
@@ -441,7 +442,7 @@ public class Administracion extends javax.swing.JFrame {
     }
 
 
-
+    //Método que comprueba si una cadena esta vacia
     public String comprobarNull(String cadena){
         
         if(cadena == null){
@@ -451,6 +452,8 @@ public class Administracion extends javax.swing.JFrame {
         }
     
     }
+    
+    //Método que regresa el sexo segun el valor ingresado
     public String conocerSexo(String Sexo){
         int numero = Integer.parseInt(Sexo);
         if(numero == 0){
@@ -460,6 +463,7 @@ public class Administracion extends javax.swing.JFrame {
         }
     }
 
+    //Metodo que calcula una edad a partir de la fecha de nacimiento
     public String calcularEdad(String Fecha){
         
         String[] partes= Fecha.split("-");
@@ -475,6 +479,7 @@ public class Administracion extends javax.swing.JFrame {
         return Edad;
     }
     
+    //Método que nos dice si el elemenot almacenado en una cadena es un numero
     private static boolean esNumero(String n) {
 		try {
 			Long.parseLong(n);
@@ -483,6 +488,7 @@ public class Administracion extends javax.swing.JFrame {
 			return false;
 		}
 	}
+    //Método que valida la boleta según su longitud
     private static boolean esBoletaValida(String n) {
 		
             if(n.length() == 10 ){
@@ -492,15 +498,17 @@ public class Administracion extends javax.swing.JFrame {
             }
 	}
     
-    
+    //Realiza una modificación en la base de datos, en este caso para inscribir a un alumno
     public void inscribir(String id){
         String boleta;
 
         try{
+            
             boleta = JOptionPane.showInputDialog("Escribe la Boleta correspondiente al Alumno");
             if(esNumero(boleta) && esBoletaValida(boleta)){
+                //Asigna la consulta a una cadena
                 String SQL = "update solicitante set Ins_Solic = 1,Bol_Solic = ? where ID_Solic = ?";
-        
+                //Prepara y ejecuta la consulta
                 PreparedStatement pst = con.prepareStatement(SQL);
                 pst.setString(1, boleta);
                 pst.setString(2, id);
@@ -520,7 +528,7 @@ public class Administracion extends javax.swing.JFrame {
         
     
     }
-    
+    //Realiza una modificación en la base de datos, en este caso para marcar como egresado  a un alumno
     public void egresar(String id){
         try{
 
@@ -542,7 +550,7 @@ public class Administracion extends javax.swing.JFrame {
     }
 
 
-    
+    //Realiza una modificación en la base de datos, en este caso para eliminar la solicitud
      public void eliminarSolicitud(String id){
         try{
             String SQL ="delete from solicitante where ID_Solic = ? " ;
@@ -951,7 +959,7 @@ public class Administracion extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    //Llama al método mandado como parametro la fila de la tabla que esta seleccionada.
     private void btnInfo3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInfo3ActionPerformed
         // TODO add your handling code here:
         int filaSeleccionada = tablaEgresados.getSelectedRow();
@@ -972,7 +980,7 @@ public class Administracion extends javax.swing.JFrame {
         // TODO add your handling code here:
 
     }//GEN-LAST:event_txtBuscar1ActionPerformed
-
+    //Llama al método mandado como parametro la fila de la tabla que esta seleccionada.
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         int filaSeleccionada = tablaSolicitud.getSelectedRow();
@@ -988,7 +996,7 @@ public class Administracion extends javax.swing.JFrame {
         mostrarInformacionSolicitud(valorID);
 
     }//GEN-LAST:event_btnInfoActionPerformed
-
+    //Llama al método mandado como parametro la fila de la tabla que esta seleccionada.
     private void btnInscribirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInscribirActionPerformed
         // TODO add your handling code here:
         int filaSeleccionada = tablaSolicitud.getSelectedRow();
@@ -1007,7 +1015,7 @@ public class Administracion extends javax.swing.JFrame {
     private void tablaInscritoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInscritoMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_tablaInscritoMouseClicked
-
+    //Llama al método mandado como parametro la fila de la tabla que esta seleccionada.
     private void btnEgresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEgresarActionPerformed
         // TODO add your handling code here:
         int filaSeleccionada = tablaInscrito.getSelectedRow();
@@ -1016,7 +1024,7 @@ public class Administracion extends javax.swing.JFrame {
         mostrarDatosInscritos();
         mostrarDatosEgresados();
     }//GEN-LAST:event_btnEgresarActionPerformed
-
+    //Llama al método mandado como parametro la fila de la tabla que esta seleccionada.
     private void btnInfo2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInfo2ActionPerformed
         // TODO add your handling code here:
         int filaSeleccionada = tablaInscrito.getSelectedRow();
@@ -1032,7 +1040,7 @@ public class Administracion extends javax.swing.JFrame {
         // TODO add your handling code here:
         filtrarDatosInscritos(txtBuscar2.getText());
     }//GEN-LAST:event_txtBuscar2KeyReleased
-
+    //Metodo que llama al método para filtrar datos, se ejecuta cada vez que una tecla es soltada.
     private void txtBuscar3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscar3KeyReleased
         // TODO add your handling code here:
         filtrarDatosEgresados(txtBuscar3.getText());

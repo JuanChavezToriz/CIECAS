@@ -298,7 +298,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
     }
-    
+    //Metodo para que pinta el logo del IPN y del CIECAS
     private void pintarImagen(JLabel lbl, String ruta){
         this.imagen = new ImageIcon(ruta);
         this.icono = new ImageIcon(

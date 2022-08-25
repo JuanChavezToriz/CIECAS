@@ -29,6 +29,7 @@ public class ConsultasMenuSQL extends conexionSQL{
         ResultSet rs =null;  
         Statement st=null;
         Connection cn=conexionSQL.conexion();
+        static int valorId;
 //Aqui estan todas las consultas de Menu Prueba
   
 //metodo para datos del solicitante
@@ -36,8 +37,12 @@ public class ConsultasMenuSQL extends conexionSQL{
  String tfmunicipioalca,int tfcp,String tfestado,String tfpais, int tftelcasa,int tftelcelular,int sexo,
  String tfcorreo1,String tfcorreo2,String tfdiscapacidad,String tflenguaext,String tfnomacade, Date jdfechanaci){
 //ESTO ES UNICAMENTE A LA TABLA SOLICITANTE
+
+      String sql = "INSERT INTO solicitante (Nom_Solic, AP_Solic , AM_Solic,FN_Solic,Sexo_Solic) VALUES (?,?,?,?,?)";
       try {   
- ps = cn.prepareStatement("INSERT INTO solicitante (Nom_Solic, AP_Solic , AM_Solic,FN_Solic,Sexo_Solic) VALUES (?,?,?,?,?)");
+            
+           ps = cn.prepareStatement(sql);
+ 
             String datos[]=new String[4];
           DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");       
 		String dateToStr = dateFormat.format(jdfechanaci); 
@@ -48,10 +53,18 @@ public class ConsultasMenuSQL extends conexionSQL{
                ps.setString(4, dateToStr);
                ps.setInt(5, sexo); 
                
-           int rs = ps.executeUpdate();
-            if(rs > 0){
+           int sd = ps.executeUpdate();
+            if(sd > 0){
     
                 JOptionPane.showMessageDialog(null, "¡Solicitante Agregado!");}
+            sql = "SELECT MAX(ID_evento) FROM evento";
+            st = cn.createStatement();
+            rs = st.executeQuery(sql);
+            while (rs.next()) {
+                valorId = Integer.parseInt(rs.getString("MAX(ID_evento)"));
+            }
+            
+            
         } catch (SQLException ex) {
             Logger.getLogger(menuprueba.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Ha ocurrido un error :(");
@@ -59,7 +72,7 @@ public class ConsultasMenuSQL extends conexionSQL{
        
 //ESTO ES UNICAMENTE A LA TABLA DOMICILIO 
         try {   
- ps = cn.prepareStatement("INSERT INTO domicilio (Call_Domic, NE_Domic , NI_Domic,Col_Domic,MD_Domic,CP_Domic,Est_Domic,Pai_Domic) VALUES (?,?,?,?,?,?,?,?)");
+ ps = cn.prepareStatement("INSERT INTO domicilio (Call_Domic, NE_Domic , NI_Domic,Col_Domic,MD_Domic,CP_Domic,Est_Domic,Pai_Domic,ID_Solic) VALUES (?,?,?,?,?,?,?,?,?)");
  
  if(tfnoext.isEmpty()||tfnoext.equals("")){
      tfnoext="";
@@ -76,6 +89,7 @@ public class ConsultasMenuSQL extends conexionSQL{
                ps.setInt(6, tfcp);
                ps.setString(7, tfestado);
                ps.setString(8, tfpais);
+               ps.setInt(9, valorId);
            int rs = ps.executeUpdate();
             if(rs > 0){
     
