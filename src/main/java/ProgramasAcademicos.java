@@ -34,23 +34,268 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         JTextFieldDateEditor editor = (JTextFieldDateEditor) jdFechaCreacion.getDateEditor();
         editor.setEditable(false);
-         JTextFieldDateEditor editor2 = (JTextFieldDateEditor) jdFechaActualizacion.getDateEditor();
-        editor.setEditable(false);
-        
+        JTextFieldDateEditor editor2 = (JTextFieldDateEditor) jdFechaActualizacion.getDateEditor();
+        editor2.setEditable(false);
+        JTextFieldDateEditor editor3 = (JTextFieldDateEditor) jdFechaInicioPeriodo.getDateEditor();
+        editor3.setEditable(false);
+        JTextFieldDateEditor editor4 = (JTextFieldDateEditor) jdFechaFinPeriodo.getDateEditor();
+        editor4.setEditable(false);
+        mostrarDatosPA();
+        mostrarDatosPeriodo();
+
     }
 
-   public void guardarProgramaAcademico(String[] datos){
-       String sql = "";
-       
-       try{
-       
-       
-       }catch (Exception ex) {
-           
-       }
-       
-   
-   }
+    public void guardarProgramaAcademico(String[] datos) {
+        String sql = "CALL `sp_guardar_programaA`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, datos[0]);
+            ps.setString(2, datos[1]);
+            ps.setString(3, datos[2]);
+            ps.setString(4, datos[3]);
+            ps.setString(5, datos[4]);
+            ps.setString(6, datos[5]);
+            ps.setString(7, datos[6]);
+            ps.setString(8, datos[7]);
+            ps.setString(9, datos[8]);
+            ps.setString(10, datos[9]);
+            int res = ps.executeUpdate();
+
+            if (res > 0) {
+                JOptionPane.showMessageDialog(null, "Evento Guardado");
+                limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al guardar");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error:" + ex.getMessage());
+        }
+        mostrarDatosPA();
+    }
+
+    public void guardarPeriodos(String[] datos) {
+        String sql = "Update periodos set A_Peri = 0 where A_Peri = 1";
+
+        try {
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            int res = ps.executeUpdate();
+            sql = "Insert into  periodos (Nom_peri, FCI_Peri, FHT_Peri, A_Peri) values (?, ?, ?, 1)";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, datos[0]);
+            ps.setString(2, datos[1]);
+            ps.setString(3, datos[2]);
+
+            res = ps.executeUpdate();
+
+            if (res > 0) {
+                JOptionPane.showMessageDialog(null, "Periodo Guardado");
+                limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al guardar periodo");
+            }
+            limpiar2();
+            mostrarDatosPeriodo();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error:" + ex.getMessage());
+        }
+
+    }
+
+    public void mostrarDatosPA() {
+
+        String[] titulos = {"Clave del Programa", "Nombre del Programa", "Modalidad"};
+        String[] registros = new String[3];
+        //Se especifica que la información de la tabla no puede ser editada.
+        DefaultTableModel modelo = new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+        };
+        //Asignación de la consulta a una String.
+        String SQL = "select Clv_Prog, Nom_Prog, Mod_prog  from programa_academico";
+
+        try {
+            //Se ejecuta la consulta y se almacenan los datos provenientes de la DB en un arreglo
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(SQL);
+            while (rs.next()) {
+
+                registros[0] = rs.getString("Clv_Prog");
+                registros[1] = rs.getString("Nom_Prog");
+                registros[2] = rs.getString("Mod_Prog");
+                modelo.addRow(registros);
+
+            }
+            //Se llena la tabla
+            tablePE.setModel(modelo);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al Mostrar Datos" + ex.getMessage());
+        }
+
+    }
+
+    public void filtrarDatosPA(String valor) {
+
+        String[] titulos = {"Clave del Programa", "Nombre del Programa", "Modalidad"};
+        String[] registros = new String[3];
+        //Se especifica que la información de la tabla no puede ser editada.
+        DefaultTableModel modelo = new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+        };
+        //Asignación de la consulta a una String.
+        String SQL = "select Clv_Prog, Nom_Prog, Mod_prog  from programa_academico where concat(Clv_Prog, ' ',Nom_Prog,' ', Mod_prog) like '%" + valor + "%'";
+
+        try {
+            //Se ejecuta la consulta y se almacenan los datos provenientes de la DB en un arreglo
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(SQL);
+            while (rs.next()) {
+
+                registros[0] = rs.getString("Clv_Prog");
+                registros[1] = rs.getString("Nom_Prog");
+                registros[2] = rs.getString("Mod_Prog");
+                modelo.addRow(registros);
+
+            }
+            //Se llena la tabla
+            tablePE.setModel(modelo);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al Mostrar Datos" + ex.getMessage());
+        }
+
+    }
+
+    public void eliminarPE(String Clv_prog) {
+        try {
+            System.out.println("Clv_prog = " + Clv_prog);
+            String SQL = "delete from programa_academico where Clv_Prog = ? ";
+            PreparedStatement pst = con.prepareStatement(SQL);
+            pst.setString(1, Clv_prog);
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "El programa academico ha sido eliminado de la base de datos");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error:" + ex.getMessage());
+        }
+    }
+
+    public void mostrarDatosPeriodo() {
+
+        String[] titulos = {"ID del Periodo","Nombre del periodo", "Fecha de inicio", "Fecha de termino"};
+        String[] registros = new String[4];
+        //Se especifica que la información de la tabla no puede ser editada.
+        DefaultTableModel modelo = new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+        };
+        //Asignación de la consulta a una String.
+        String SQL = "select ID_Peri,Nom_Peri,FCI_Peri , FHT_Peri  from periodos";
+
+        try {
+            //Se ejecuta la consulta y se almacenan los datos provenientes de la DB en un arreglo
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(SQL);
+            while (rs.next()) {
+
+                registros[0] = rs.getString("ID_Peri");
+                registros[1] = rs.getString("Nom_Peri");
+                registros[2] = rs.getString("FCI_Peri");
+                registros[3]  = rs.getString("FHT_Peri");
+                modelo.addRow(registros);
+
+            }
+            //Se llena la tabla
+            tablePeriodos.setModel(modelo);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al Mostrar Datos" + ex.getMessage());
+        }
+
+    }
+
+    public void filtrarDatosPeriodo(String valor) {
+
+
+       String[] titulos = {"ID del Periodo","Nombre del periodo", "Fecha de inicio", "Fecha de termino"};
+        String[] registros = new String[4];
+        //Se especifica que la información de la tabla no puede ser editada.
+        DefaultTableModel modelo = new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+        };
+        //Asignación de la consulta a una String.
+        String SQL = "select ID_Peri,Nom_Peri,FCI_Peri , FHT_Peri  from periodos where concat(Nom_Peri, ' ',FCI_Peri,' ', FHT_Peri) like '%" + valor + "%'";
+
+        try {
+            //Se ejecuta la consulta y se almacenan los datos provenientes de la DB en un arreglo
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(SQL);
+            while (rs.next()) {
+
+                registros[0] = rs.getString("ID_Peri");
+                registros[1] = rs.getString("Nom_Peri");
+                registros[2] = rs.getString("FCI_Peri");
+                registros[3]  = rs.getString("FHT_Peri");
+                modelo.addRow(registros);
+
+            }
+            //Se llena la tabla
+            tablePeriodos.setModel(modelo);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al Mostrar Datos" + ex.getMessage());
+        }
+
+    }
+    
+     public void eliminarPerido(String ID_Peri) {
+        try {
+            
+            String SQL = "delete from periodos where ID_Peri = ? ";
+            PreparedStatement pst = con.prepareStatement(SQL);
+            pst.setString(1, ID_Peri);
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "El periodo ha sido eliminado de la base de datos");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error:" + ex.getMessage());
+        }
+    }
+
+    public void limpiar2() {
+
+        JTextFieldDateEditor editor = (JTextFieldDateEditor) jdFechaInicioPeriodo.getDateEditor();
+        JTextFieldDateEditor editor2 = (JTextFieldDateEditor) jdFechaFinPeriodo.getDateEditor();
+
+        txtNomPeri.setText(null);
+        editor.setText(null);
+        editor2.setText(null);
+
+    }
+
+    public void limpiar() {
+
+        JTextFieldDateEditor editor = (JTextFieldDateEditor) jdFechaCreacion.getDateEditor();
+        JTextFieldDateEditor editor2 = (JTextFieldDateEditor) jdFechaActualizacion.getDateEditor();
+
+        txtCAC.setText(null);
+        txtCVP.setText(null);
+        txtCantidad.setText(null);
+        txtNomPE.setText(null);
+        editor.setText(null);
+        editor2.setText(null);
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -86,24 +331,29 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         cbxPeriAdmi = new javax.swing.JComboBox<>();
         jScrollPane4 = new javax.swing.JScrollPane();
-        tableMov3 = new javax.swing.JTable();
+        tablePE = new javax.swing.JTable();
         jLabel17 = new javax.swing.JLabel();
         btnAgregarPrograma = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jLabel18 = new javax.swing.JLabel();
+        txtBuscar3 = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jPanel18 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tableMov2 = new javax.swing.JTable();
+        tablePeriodos = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
         txtBuscar2 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jdFechaEvento = new com.toedter.calendar.JDateChooser();
+        txtNomPeri = new javax.swing.JTextField();
+        jdFechaInicioPeriodo = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jdFechaEvento1 = new com.toedter.calendar.JDateChooser();
+        jdFechaFinPeriodo = new com.toedter.calendar.JDateChooser();
         jButton3 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
 
@@ -171,9 +421,9 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
 
         jLabel16.setText("Periodo de admisión: ");
 
-        cbxPeriAdmi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bienal", "Anual", "Semestre", "Otro" }));
+        cbxPeriAdmi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", " " }));
 
-        tableMov3.setModel(new javax.swing.table.DefaultTableModel(
+        tablePE.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -184,21 +434,21 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
 
             }
         ));
-        tableMov3.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tableMov3.addMouseListener(new java.awt.event.MouseAdapter() {
+        tablePE.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablePE.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableMov3MouseClicked(evt);
+                tablePEMouseClicked(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                tableMov3MousePressed(evt);
+                tablePEMousePressed(evt);
             }
         });
-        tableMov3.addKeyListener(new java.awt.event.KeyAdapter() {
+        tablePE.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                tableMov3KeyReleased(evt);
+                tablePEKeyReleased(evt);
             }
         });
-        jScrollPane4.setViewportView(tableMov3);
+        jScrollPane4.setViewportView(tablePE);
 
         jLabel17.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel17.setText("Programas de Estudio");
@@ -207,6 +457,34 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
         btnAgregarPrograma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarProgramaActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Limpiar");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Borrar");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jLabel18.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        jLabel18.setText("Búsqueda:");
+
+        txtBuscar3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscar3ActionPerformed(evt);
+            }
+        });
+        txtBuscar3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscar3KeyReleased(evt);
             }
         });
 
@@ -261,26 +539,37 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
                                         .addComponent(jLabel12)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jdFechaActualizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel17)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(jPanel16Layout.createSequentialGroup()
                         .addComponent(jLabel15)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel16)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxPeriAdmi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(325, 325, 325)
-                        .addComponent(btnAgregarPrograma)
-                        .addGap(74, 74, 74))))
+                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel16Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxPeriAdmi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(234, 234, 234)
+                                .addComponent(jButton5)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnAgregarPrograma)
+                                .addGap(74, 74, 74))
+                            .addGroup(jPanel16Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButton6)
+                                    .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel17)
+                                        .addGroup(jPanel16Layout.createSequentialGroup()
+                                            .addComponent(jLabel18)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(txtBuscar3, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(txtCVP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -311,14 +600,28 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(cbxPeriAdmi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAgregarPrograma))
-                .addGap(33, 33, 33)
-                .addComponent(jLabel15)
-                .addGap(43, 43, 43)
+                    .addComponent(btnAgregarPrograma)
+                    .addComponent(jButton5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel17)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel16Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(jPanel16Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtBuscar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addGap(281, 281, 281))
+                    .addGroup(jPanel16Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton6)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -326,16 +629,16 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
-                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, 781, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Añadir Programa Académico", jPanel1);
@@ -344,7 +647,7 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
 
         jPanel18.setAutoscrolls(true);
 
-        tableMov2.setModel(new javax.swing.table.DefaultTableModel(
+        tablePeriodos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -355,21 +658,21 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
 
             }
         ));
-        tableMov2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tableMov2.addMouseListener(new java.awt.event.MouseAdapter() {
+        tablePeriodos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablePeriodos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableMov2MouseClicked(evt);
+                tablePeriodosMouseClicked(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                tableMov2MousePressed(evt);
+                tablePeriodosMousePressed(evt);
             }
         });
-        tableMov2.addKeyListener(new java.awt.event.KeyAdapter() {
+        tablePeriodos.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                tableMov2KeyReleased(evt);
+                tablePeriodosKeyReleased(evt);
             }
         });
-        jScrollPane3.setViewportView(tableMov2);
+        jScrollPane3.setViewportView(tablePeriodos);
 
         jLabel11.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel11.setText("Búsqueda:");
@@ -389,20 +692,37 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
         jLabel1.setText("Historial de Periodos Escolares");
 
         jButton2.setText("Nuevo Periodo Académico");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Nombre del Periodo:");
 
-        jdFechaEvento.setToolTipText("Introduce la fecha a llevarse a cabo el evento.");
-        jdFechaEvento.setMinSelectableDate(new java.util.Date(-62135744288000L));
+        jdFechaInicioPeriodo.setToolTipText("Introduce la fecha a llevarse a cabo el evento.");
+        jdFechaInicioPeriodo.setMinSelectableDate(new java.util.Date(-62135744288000L));
 
         jLabel3.setText("Fecha de Inicio del Periodo Académico");
 
         jLabel4.setText("Fecha de Filanización del Periodo Académico");
 
-        jdFechaEvento1.setToolTipText("Introduce la fecha a llevarse a cabo el evento.");
-        jdFechaEvento1.setMinSelectableDate(new java.util.Date(-62135744288000L));
+        jdFechaFinPeriodo.setToolTipText("Introduce la fecha a llevarse a cabo el evento.");
+        jdFechaFinPeriodo.setMinSelectableDate(new java.util.Date(-62135744288000L));
 
         jButton3.setText("Eliminar Periodo Académico");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton7.setText("Limpiar");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
@@ -426,25 +746,19 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
                             .addGroup(jPanel18Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtNomPeri, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(30, Short.MAX_VALUE))
                             .addGroup(jPanel18Layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
                                 .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jdFechaEvento1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(jPanel18Layout.createSequentialGroup()
-                                                    .addGap(41, 41, 41)
-                                                    .addComponent(jButton2)
-                                                    .addGap(21, 21, 21))
-                                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
-                                            .addGroup(jPanel18Layout.createSequentialGroup()
-                                                .addGap(37, 37, 37)
-                                                .addComponent(jdFechaEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                     .addGroup(jPanel18Layout.createSequentialGroup()
-                                        .addGap(37, 37, 37)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(jButton2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton7))
+                                    .addComponent(jdFechaFinPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jdFechaInicioPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel18Layout.createSequentialGroup()
                         .addComponent(jButton3)
@@ -464,17 +778,19 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
                     .addGroup(jPanel18Layout.createSequentialGroup()
                         .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33)
+                            .addComponent(txtNomPeri, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(31, 31, 31)
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jdFechaEvento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
+                        .addComponent(jdFechaInicioPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jdFechaEvento1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(jButton2))
+                        .addComponent(jdFechaFinPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(jButton7)))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
@@ -519,7 +835,7 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(736, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
@@ -539,17 +855,17 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void tableMov2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMov2MouseClicked
+    private void tablePeriodosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePeriodosMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_tableMov2MouseClicked
+    }//GEN-LAST:event_tablePeriodosMouseClicked
 
-    private void tableMov2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMov2MousePressed
+    private void tablePeriodosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePeriodosMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tableMov2MousePressed
+    }//GEN-LAST:event_tablePeriodosMousePressed
 
-    private void tableMov2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableMov2KeyReleased
+    private void tablePeriodosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablePeriodosKeyReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_tableMov2KeyReleased
+    }//GEN-LAST:event_tablePeriodosKeyReleased
 
     private void txtBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscar2ActionPerformed
         // TODO add your handling code here:
@@ -557,6 +873,7 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
 
     private void txtBuscar2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscar2KeyReleased
         // TODO add your handling code here:
+        filtrarDatosPeriodo(txtBuscar2.getText());
     }//GEN-LAST:event_txtBuscar2KeyReleased
 
     private void txtCVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCVPActionPerformed
@@ -571,17 +888,17 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCACActionPerformed
 
-    private void tableMov3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMov3MouseClicked
+    private void tablePEMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePEMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_tableMov3MouseClicked
+    }//GEN-LAST:event_tablePEMouseClicked
 
-    private void tableMov3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMov3MousePressed
+    private void tablePEMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePEMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tableMov3MousePressed
+    }//GEN-LAST:event_tablePEMousePressed
 
-    private void tableMov3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableMov3KeyReleased
+    private void tablePEKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablePEKeyReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_tableMov3KeyReleased
+    }//GEN-LAST:event_tablePEKeyReleased
 
     private void btnAgregarProgramaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProgramaActionPerformed
         // TODO add your handling code here:
@@ -614,8 +931,68 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
             datos[9] = (String) cbxPeriAdmi.getSelectedItem();
             guardarProgramaAcademico(datos);
         }
-        
+
     }//GEN-LAST:event_btnAgregarProgramaActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        limpiar();
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        int filaSeleccionada = tablePE.getSelectedRow();
+        String valorID = (String) tablePE.getValueAt(filaSeleccionada, 0);
+        eliminarPE(valorID);
+        mostrarDatosPA();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        JTextFieldDateEditor editor3 = (JTextFieldDateEditor) jdFechaInicioPeriodo.getDateEditor();
+        JTextFieldDateEditor editor4 = (JTextFieldDateEditor) jdFechaFinPeriodo.getDateEditor();
+        if (txtNomPeri.getText().trim().isEmpty() || editor3.getText().trim().isEmpty() || editor4.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Introduce todos los datos");
+        } else {
+            String dia = Integer.toString(jdFechaInicioPeriodo.getCalendar().get(Calendar.DAY_OF_MONTH));
+            String mes = Integer.toString(jdFechaInicioPeriodo.getCalendar().get(Calendar.MONTH) + 1);
+            String year = Integer.toString(jdFechaInicioPeriodo.getCalendar().get(Calendar.YEAR));
+            String fecha = (year + "-" + mes + "-" + dia);
+            dia = Integer.toString(jdFechaFinPeriodo.getCalendar().get(Calendar.DAY_OF_MONTH));
+            mes = Integer.toString(jdFechaFinPeriodo.getCalendar().get(Calendar.MONTH) + 1);
+            year = Integer.toString(jdFechaFinPeriodo.getCalendar().get(Calendar.YEAR));
+            String fecha2 = (year + "-" + mes + "-" + dia);
+
+            String[] datos = new String[3];
+
+            datos[0] = txtNomPeri.getText();
+            datos[1] = fecha;
+            datos[2] = fecha2;
+            guardarPeriodos(datos);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+        limpiar2();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void txtBuscar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscar3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscar3ActionPerformed
+
+    private void txtBuscar3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscar3KeyReleased
+        // TODO add your handling code here:
+        filtrarDatosPA(txtBuscar3.getText());
+    }//GEN-LAST:event_txtBuscar3KeyReleased
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        int filaSeleccionada = tablePeriodos.getSelectedRow();
+        String valorID = (String) tablePeriodos.getValueAt(filaSeleccionada, 0);
+        eliminarPerido(valorID);
+        mostrarDatosPeriodo();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -662,6 +1039,9 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -670,6 +1050,7 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -686,17 +1067,18 @@ public class ProgramasAcademicos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTextField jTextField1;
     private com.toedter.calendar.JDateChooser jdFechaActualizacion;
     private com.toedter.calendar.JDateChooser jdFechaCreacion;
-    private com.toedter.calendar.JDateChooser jdFechaEvento;
-    private com.toedter.calendar.JDateChooser jdFechaEvento1;
-    private javax.swing.JTable tableMov2;
-    private javax.swing.JTable tableMov3;
+    private com.toedter.calendar.JDateChooser jdFechaFinPeriodo;
+    private com.toedter.calendar.JDateChooser jdFechaInicioPeriodo;
+    private javax.swing.JTable tablePE;
+    private javax.swing.JTable tablePeriodos;
     private javax.swing.JTextField txtBuscar2;
+    private javax.swing.JTextField txtBuscar3;
     private javax.swing.JTextField txtCAC;
     private javax.swing.JTextField txtCVP;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtNomPE;
+    private javax.swing.JTextField txtNomPeri;
     // End of variables declaration//GEN-END:variables
 }
