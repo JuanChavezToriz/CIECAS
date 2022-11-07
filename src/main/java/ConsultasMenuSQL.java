@@ -36,7 +36,7 @@ public class ConsultasMenuSQL extends conexionSQL {
             String tfcorreo1, String tfcorreo2, String tfdiscapacidad, String tflenguaext, String tfnomacade, Date jdfechanaci,String especialidad) {
           //ESTO ES UNICAMENTE A LA TABLA SOLICITANTE
 
-        String sql = "INSERT INTO solicitante (Nom_Solic, AP_Solic , AM_Solic,FN_Solic,Sexo_Solic,Clv_Prog,Ins_Solic,Egr_Solic,PF_Solic,PI_Solic,EM_Solic) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO solicitante (Nom_Solic, AP_Solic , AM_Solic,FN_Solic,Sexo_Solic,ID_Prog,Ins_Solic,Egr_Solic,PF_Solic,PI_Solic,EM_Solic) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         try {
 
             ps = cn.prepareStatement(sql);
@@ -253,7 +253,7 @@ public class ConsultasMenuSQL extends conexionSQL {
 
     public int especialidadJC(String especialidad) {
         
-        String SQL = "select Clv_Prog from programa_academico where Nom_Prog= '" + especialidad + "'";
+        String SQL = "select ID_Prog from programa_academico where Nom_Prog= '" + especialidad + "'";
         int clv_programa=0;
         try {
             st = cn.createStatement();
@@ -261,7 +261,7 @@ public class ConsultasMenuSQL extends conexionSQL {
             
       
             while (rs.next()) {
-                clv_programa = Integer.parseInt(rs.getString("Clv_Prog"));
+                clv_programa = Integer.parseInt(rs.getString("ID_Prog"));
                  
             }
             JOptionPane.showMessageDialog(null, "¡Esta es la CLAVE del CB!" +clv_programa);

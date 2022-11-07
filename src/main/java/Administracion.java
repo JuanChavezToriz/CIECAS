@@ -420,7 +420,7 @@ public class Administracion extends javax.swing.JFrame {
             
             
             JOptionPane.showMessageDialog(null, 
-                      "Edad: " + calcularEdad(registros[0])+
+                      "Edad: " + (registros[0])+
                       "\nSexo: " + conocerSexo(registros[1])+ 
                       "\nDirección: " + registros[2] + "  " +  registros[3]+ " " + comprobarNull(registros[4]) + ", "+ registros[5] +", "+ registros[6]+
                       ", " + registros[7] + ", " + registros[8]+ 
