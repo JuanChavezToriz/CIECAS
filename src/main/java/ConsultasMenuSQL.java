@@ -37,9 +37,20 @@ public class ConsultasMenuSQL extends conexionSQL {
           //ESTO ES UNICAMENTE A LA TABLA SOLICITANTE
 
         String sql = "INSERT INTO solicitante (Nom_Solic, AP_Solic , AM_Solic,FN_Solic,Sexo_Solic,ID_Prog,Ins_Solic,Egr_Solic,PF_Solic,PI_Solic,EM_Solic) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        
+        String sqlPI="select PI_Solic from solicitante where PI_Solic in (select MAX(PI_Solic) from solicitante)";
+        String PISolic="";
         try {
 
             ps = cn.prepareStatement(sql);
+            
+            Statement stPI = cn.createStatement();
+            ResultSet rsPI = stPI.executeQuery(sqlPI);
+
+            while (rsPI.next()) {
+                PISolic= rsPI.getString("PI_Solic");
+            }
+            
             byte bit = 0;
             String datos[] = new String[4];
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -55,7 +66,7 @@ public class ConsultasMenuSQL extends conexionSQL {
             ps.setByte(7, bit);
             ps.setByte(8, bit);
             ps.setString(9, "Nada");
-            ps.setString(10, "Nada");
+            ps.setString(10, PISolic);
             ps.setByte(11, bit);
 
             int sd = ps.executeUpdate();
